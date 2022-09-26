@@ -9,6 +9,12 @@ service postgresql start/stop
 
 Server Status:
 service postgresql status
+
+# heroku PSQL
+connect to psql terminal
+heroku pg:psql -a roommate-app
+
+
 # Postgresql Commands
 PSQL Commands:
 sudo su postgres
@@ -23,6 +29,28 @@ database password: 123qwer456
 
 Login:
 sudo -u - postgres psql
+# Useful Videos
+PERN DEPLOY TUTORIAL{
+    https://www.youtube.com/c/TheStoicProgrammers/videos
+    https://www.youtube.com/watch?v=ZJxUOOND5_A
+    https://github.com/ousecTic/pern-deploy-tutorial
+}
+
+# Useful Links
+https://devcenter.heroku.com/categories/heroku-redis
+https://dba.stackexchange.com/questions/1285/how-do-i-list-all-databases-and-tables-using-psql
+https://stackoverflow.com/questions/35942754/how-can-i-save-username-and-password-in-git
+https://stackoverflow.com/questions/12720967/how-can-i-change-a-postgresql-user-password
+
+https://stackoverflow.com/questions/66787109/how-to-use-a-postgres-db-on-heroku-with-axios-and-vue
+
+# Heroku Project Links
+https://roommate-ap.herokuapp.com/
+https://dashboard.heroku.com/apps/roommate-ap
+https://data.heroku.com/datastores/bd8b8bbb-8f34-44d9-ab7c-70106ffd55cc#
+
+# Git Repository (Updating this Repository also builds to prod)
+https://github.com/Killerpies/roommate-app
 
 ## Project setup
 ```
