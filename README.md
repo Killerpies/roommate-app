@@ -24,6 +24,10 @@ list all database: \lu
 
 list all users & roles: \du
 
+connect to specific database: \c roommateapp || \c postgres0
+
+list all tables in database: \dt
+
 database username: userDatabase
 database password: 123qwer456
 
