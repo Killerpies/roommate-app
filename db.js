@@ -5,7 +5,7 @@ const devConfig = {
 	password: process.env.PG_PASSWORD,
 	host: process.env.PG_HOST,
 	port: process.env.PG_PORT,
-  database: "roommateapp"
+	database: "roommateapp"
 	// database: process.env.PG_DATABASE
 };
 

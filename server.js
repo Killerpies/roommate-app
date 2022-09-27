@@ -8,6 +8,8 @@ const port = process.env.PORT || 8080;
 const pool = require("./db");
 const app = express();
 app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 
 
 app.post("/cats", async(req,res)=>{
@@ -34,7 +36,10 @@ app.get("/cats", async (req, res) => {
 });
 
 //here we are configuring dist to serve app files
-app.use("/", serveStatic(path.join(__dirname, "/dist")));
+if (process.env.NODE_ENV === "production"){
+  app.use("/", serveStatic(path.join(__dirname, "/dist")));
+}
+
 
 // this * route is to serve project on different page routes except root `/`
 app.get(/.*/, function (req, res) {
