@@ -25,7 +25,7 @@ app.post("/cats", async(req,res)=>{
   }
 });
 
-app.get("/cats", async (req, res) => {
+app.get("/api/cats", async (req, res) => {
   try {
     const allTodos = await pool.query("SELECT * FROM cat");
 

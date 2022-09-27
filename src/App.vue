@@ -1,10 +1,78 @@
 <template>
-  <nav>
+  <!-- <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
+  </nav> -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">JustinSanders.org</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li> -->
+        </ul>
+      </div>
+      <form class="d-flex">
+        <button
+          v-if="!isAuthenticated"
+          class="btn btn-outline-secondary"
+          type="submit"
+          @click="login"
+        >
+          Log in
+        </button>
+        <button
+          v-if="isAuthenticated"
+          class="btn btn-outline-secondary"
+          type="submit"
+          @click="logout"
+        >
+          Log out
+        </button>
+      </form>
+    </div>
   </nav>
-  <router-view/>
+  <router-view />
 </template>
+<script>
+import { useAuth0 } from "@auth0/auth0-vue";
+
+export default {
+  name: "App",
+  components: {},
+  setup() {
+    const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+    return {
+      login: () => {
+        loginWithRedirect();
+      },
+      logout: () => {
+        logout({ returnTo: window.location.origin });
+      },
+      user,
+      isAuthenticated,
+    };
+  },
+};
+</script>
 
 <style lang="scss">
 #app {

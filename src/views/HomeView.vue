@@ -3,19 +3,30 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
+  <!-- <div>
+    <button type="button" class="btn btn-primary">Primary</button>
+    <button type="button" class="btn btn-secondary">Secondary</button>
+    <button type="button" class="btn btn-success">Success</button>
+    <button type="button" class="btn btn-danger">Danger</button>
+    <button type="button" class="btn btn-warning">Warning</button>
+    <button type="button" class="btn btn-info">Info</button>
+    <button type="button" class="btn btn-light">Light</button>
+    <button type="button" class="btn btn-dark">Dark</button>
+    <button type="button" class="btn btn-link">Link</button>
+  </div>
+
   <div>
     <button @click="login">Log in</button>
   </div>
   <div>
     <button @click="logout">Log out</button>
-  </div>
+  </div> -->
   <div>
     <pre v-if="isAuthenticated">
         <code>{{ user }}</code>
         <code>{{user.id}}</code>
       </pre>
   </div>
-  <button @click="printInfo">printInfo</button>
   <h1>HERE IS WHERE LIST IS</h1>
   <div v-for="(item, index) in catnames" v-bind:key="index">
     <li>{{ item.name }}</li>
@@ -57,7 +68,7 @@ export default {
   methods: {
     getcat: async function () {
       try {
-        let url = "/cats";
+        let url = "/api/cats";
 
         let data = await axios.get(url);
         this.catnames = data.data;
