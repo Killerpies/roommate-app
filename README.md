@@ -1,8 +1,12 @@
 # roommate-app
 # Start Commands
-Node server.js
+Start Whole Local dev environment (proxy, api, dev server):
+    npm run startServers
 
-npm run serve
+Run the api:
+    Node server.js
+Run the local dev server
+    npm run serve
 
 Start/Stop server:
 service postgresql start/stop
