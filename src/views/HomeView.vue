@@ -32,7 +32,7 @@ export default {
   methods:{
     getcat: async function(){
     try {
-        let data =  await axios.get('http://localhost:8080/cats')
+        let data =  await axios.get(window.location.origin +'cats')
         // console.log('data')
         // console.log(data.data)
         this.catnames = data.data
