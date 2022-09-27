@@ -32,7 +32,8 @@ export default {
   methods:{
     getcat: async function(){
     try {
-      let url = window.location.origin + '/cats'
+      let url ='/cats'
+      console.log(url)
         let data =  await axios.get(url)
         // console.log('data')
         // console.log(data.data)
