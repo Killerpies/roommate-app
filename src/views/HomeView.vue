@@ -1,8 +1,10 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <NotLoggedIn></NotLoggedIn>
   </div>
+  <!-- <div v-if="isAuthenticated">
+    <Homepage></Homepage>
+  </div> -->
   <!-- <div>
     <button type="button" class="btn btn-primary">Primary</button>
     <button type="button" class="btn btn-secondary">Secondary</button>
@@ -27,22 +29,24 @@
         <code>{{user.id}}</code>
       </pre>
   </div>
-  <h1>HERE IS WHERE LIST IS</h1>
+  <!-- <h1>HERE IS WHERE LIST IS</h1>
   <div v-for="(item, index) in catnames" v-bind:key="index">
     <li>{{ item.name }}</li>
-  </div>
+  </div> -->
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import NotLoggedIn from "@/components/NotLoggedIn.vue";
+// import Homepage from "@/components/roomateApp/Dashboard.vue";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
   name: "HomeView",
   components: {
-    HelloWorld,
+    // Homepage,
+    NotLoggedIn,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
@@ -62,9 +66,7 @@ export default {
       catnames: [],
     };
   },
-  mounted() {
-    this.getcat();
-  },
+  mounted() {},
   methods: {
     getcat: async function () {
       try {

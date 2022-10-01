@@ -5,35 +5,24 @@ const express = require("express");
 const serveStatic = require("serve-static");
 const path = require("path");
 const port = process.env.PORT || 8080;
-const pool = require("./db");
+// const pool = require("./db");
 const app = express();
 app.use(express.json());
 const cors = require('cors');
 app.use(cors());
 
+// routes
+//Financial rout
+const roommateFinancial = require("./apiRoutes/roommateFinancial")
+app.use("/api/cats" ,roommateFinancial)
+// Group Routes
+const roommateGroups = require("./apiRoutes/roommateGroups.js")
+app.use("/api/groups" ,roommateGroups)
+// USER Group Routes
+const roommateUserGroups = require("./apiRoutes/roommateUserGroups.js")
+app.use("/api/userGroups" ,roommateUserGroups)
 
-app.post("/cats", async(req,res)=>{
-  try{
-    //await
-    let { name } = req.body;
-    console.log('req body here')
-    console.log(req.body)
-    const newCat = await pool.query(`INSERT INTO cat (name) VALUES ('${name}') RETURNING *`);
-    res.json(newCat);
-  }catch (error) {
-    console.error(error.message);
-  }
-});
 
-app.get("/api/cats", async (req, res) => {
-  try {
-    const allTodos = await pool.query("SELECT * FROM cat");
-
-    res.json(allTodos.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
 
 //here we are configuring dist to serve app files
 if (process.env.NODE_ENV === "production"){
