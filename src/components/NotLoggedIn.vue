@@ -15,7 +15,6 @@
         Go to app
       </button>
     </div>
-    <!-- <p><br /><br /><br /><br /><br /></p> -->
   </body>
 </template>
 

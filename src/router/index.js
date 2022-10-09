@@ -22,8 +22,15 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "roommateApp" */ '../views/Roomate.vue')
+    component: () => import(/* webpackChunkName: "roommateApp" */ '../views/RoomateAppViews/Roomate.vue')
+  },
+  {
+    path: '/roommateapp/createGroup',
+    name:'createGroup',
+    component: () => import(/* webpackChunkName: "roommateApp" */ '../views/RoomateAppViews/CreateGroup.vue')
+
   }
+
 ]
 
 const router = createRouter({

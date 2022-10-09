@@ -1,42 +1,31 @@
 <template>
-  <div class="home" v-show="!isAuthenticated">
-    <NotLoggedIn></NotLoggedIn>
-  </div>
-  <div v-if="isAuthenticated">
-    <div class="row">
-      <div class="col">
-        <h3>Your group:</h3>
-      </div>
-      <div class="col">
-        <select
-          class="form-select form-select-sm"
-          aria-label="Default select example"
-        >
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
-      </div>
-      <div>
-        <pre v-if="isAuthenticated">
-        <code>{{ user }}</code>
-        <code>{{user.id}}</code>
-      </pre>
-      </div>
-    </div>
-    <h1>HERE IS WHERE LIST IS GroupInfo</h1>
-    <div v-for="(item, index) in groupInfo" v-bind:key="index">
-      <li>{{ item }}</li>
-    </div>
-    <h1>HERE IS WHERE LIST IS UserGroups</h1>
-    <div v-for="(item, index) in groups" v-bind:key="index">
-      <li>{{ item }}</li>
-    </div>
-    <h1>HERE IS WHERE LIST IS</h1>
-    <div v-for="(item, index) in catnames" v-bind:key="index">
-      <li>{{ item.name }}</li>
-    </div>
+  <NotLoggedIn v-show="!isAuthenticated"></NotLoggedIn>
+  <div class="createJoinGroup" v-if="isAuthenticated">
+    <body>
+      <h1>Create a Group:</h1>
+      <br />
+      <button class="btn btn-warning" @click="createGroup">Create Group</button>
+      <br />
+      <br />
+      <h1>Join a Group:</h1>
+      <p>
+        <strong
+          >Youre ID (Copy This):
+          <br />
+          <br />
+        </strong>
+      </p>
+      <p id="copyUserID">
+        {{ userID }}
+      </p>
+      <br />
+      <p>
+        Send <strong>Your ID</strong> to <strong>Your Group Leader</strong
+        ><br />
+        They can add you to the group from the
+        <strong>Group Settings Page</strong>
+      </p>
+    </body>
   </div>
 </template>
 
@@ -46,6 +35,7 @@
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
 import NotLoggedIn from "@/components/NotLoggedIn.vue";
+import router from "../../router";
 
 export default {
   name: "RoommateView",
@@ -76,10 +66,28 @@ export default {
   },
   mounted() {
     this.getUserID();
+    <button onclick="myFunction()">Copy text</button>;
     this.getRelatedGroups();
     this.getcat();
   },
   methods: {
+    createGroup: function () {
+      router.push({ name: "createGroup" });
+    },
+    copyId: function () {
+      // Get the text field
+      var copyText = document.getElementById("copyUserID");
+
+      // Select the text field
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+      // Copy the text inside the text field
+      navigator.clipboard.writeText(copyText.value);
+
+      // Alert the copied text
+      alert("Copied the text: " + copyText.value);
+    },
     getcat: async function () {
       try {
         let url = "/api/cats";
@@ -119,3 +127,9 @@ export default {
   },
 };
 </script>
+<style>
+.createJoinGroup {
+  margin: 10px;
+  text-align: left;
+}
+</style>
