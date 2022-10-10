@@ -2,6 +2,27 @@
   <NotLoggedIn v-show="!isAuthenticated"></NotLoggedIn>
   <div class="createJoinGroup" v-if="isAuthenticated">
     <body>
+      <h1>Your Groups</h1>
+      <div class="formArea">
+        <select
+          id="selectedGroup"
+          class="form-select"
+          aria-label="Default select example"
+        >
+          <!-- <option selected>Open this select menu</option> -->
+          <option
+            v-for="(item, index) in groupInfo"
+            :key="index"
+            v-bind:value="item.groupid"
+          >
+            {{ item.groupname }}
+          </option>
+        </select>
+      </div>
+      <br />
+      <button class="btn btn-warning" @click="goToGroup">Go to group</button>
+      <br />
+      <br />
       <h1>Create a Group:</h1>
       <br />
       <button class="btn btn-warning" @click="createGroup">Create Group</button>
@@ -65,12 +86,18 @@ export default {
     };
   },
   mounted() {
+    if (!this.isAuthenticated) {
+      router.push({ name: "home" });
+    }
     this.getUserID();
-    <button onclick="myFunction()">Copy text</button>;
     this.getRelatedGroups();
-    this.getcat();
   },
   methods: {
+    goToGroup: function () {
+      var x = document.getElementById("selectedGroup").value;
+      // console.log(x);
+      router.push({ name: "groupDashboard", params: { groupID: x } });
+    },
     createGroup: function () {
       router.push({ name: "createGroup" });
     },
@@ -88,16 +115,6 @@ export default {
       // Alert the copied text
       alert("Copied the text: " + copyText.value);
     },
-    getcat: async function () {
-      try {
-        let url = "/api/cats";
-
-        let data = await axios.get(url);
-        this.catnames = data.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     getUserID: function () {
       let tempid = this.user.sub.split("|")[1].replace(/\s/g, "");
       this.userID = tempid;
@@ -114,10 +131,10 @@ export default {
       try {
         let tempGroups = [];
         for (let i = 0; i < this.groups.length; i++) {
-          console.log(this.groups[i]);
+          // console.log(this.groups[i]);
           let url = `/api/groups/${this.groups[i].usergroupid}`;
           let data = await axios.get(url);
-          tempGroups.push(data.data);
+          tempGroups.push(data.data[0]);
         }
         this.groupInfo = tempGroups;
       } catch (error) {
@@ -131,5 +148,12 @@ export default {
 .createJoinGroup {
   margin: 10px;
   text-align: left;
+}
+.formArea {
+  text-align: right;
+  margin: left;
+  width: 40%;
+  /* border: 3px solid green; */
+  /* padding: 10px; */
 }
 </style>

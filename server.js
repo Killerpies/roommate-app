@@ -21,7 +21,9 @@ app.use("/api/groups" ,roommateGroups)
 // USER Group Routes
 const roommateUserGroups = require("./apiRoutes/roommateUserGroups.js")
 app.use("/api/userGroups" ,roommateUserGroups)
-
+// GROUP MEMBER ROUTES
+const roommateGroupMember = require("./apiRoutes/roommateGroups.js")
+app.use("/api/userGroupMembers" ,roommateGroupMember)
 
 
 //here we are configuring dist to serve app files

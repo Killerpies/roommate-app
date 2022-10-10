@@ -27,7 +27,14 @@ const routes = [
   {
     path: '/roommateapp/createGroup',
     name:'createGroup',
-    component: () => import(/* webpackChunkName: "roommateApp" */ '../views/RoomateAppViews/CreateGroup.vue')
+    component: () => import(/* webpackChunkName: "createGroup" */ '../views/RoomateAppViews/CreateGroup.vue')
+
+  },
+  {
+    path: '/roommateapp/groupDashboard/:groupID',
+    name:'groupDashboard',
+    props: true,
+    component: () => import(/* webpackChunkName: "groupDashboard" */ '../views/RoomateAppViews/GroupDashboard.vue')
 
   }
 
