@@ -13,18 +13,20 @@ app.use(cors());
 
 // routes
 //Financial rout
-const roommateFinancial = require("./apiRoutes/roommateFinancial")
+const roommateFinancial = require("./apiRoutes/roommateApp/financial/roommateFinancial")
 app.use("/api/cats" ,roommateFinancial)
 // Group Routes
-const roommateGroups = require("./apiRoutes/roommateGroups.js")
+const roommateGroups = require("./apiRoutes/roommateApp/groups/roommateGroups.js")
 app.use("/api/groups" ,roommateGroups)
 // USER Group Routes
-const roommateUserGroups = require("./apiRoutes/roommateUserGroups.js")
+const roommateUserGroups = require("./apiRoutes/roommateApp/groups/roommateUserGroups.js")
 app.use("/api/userGroups" ,roommateUserGroups)
 // GROUP MEMBER ROUTES
-const roommateGroupMember = require("./apiRoutes/roommateGroups.js")
+const roommateGroupMember = require("./apiRoutes/roommateApp/groups/roommateGroupMembers.js")
 app.use("/api/userGroupMembers" ,roommateGroupMember)
-
+// USER INFO ROUTES
+const userInfo = require("./apiRoutes/roommateApp/user/userInfo.js")
+app.use("/api/userInfo", userInfo)
 
 //here we are configuring dist to serve app files
 if (process.env.NODE_ENV === "production"){

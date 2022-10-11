@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../db");
+const pool = require("../../../db");
 const router = express.Router()
 
 
@@ -7,8 +7,8 @@ router.post("/", async(req,res)=>{
     try{
       //await
       let { name } = req.body;
-      console.log('req body here')
-      console.log(req.body)
+      // console.log('req body here')
+      // console.log(req.body)
       const newCat = await pool.query(`INSERT INTO cat (name) VALUES ('${name}') RETURNING *`);
       res.json(newCat);
     }catch (error) {

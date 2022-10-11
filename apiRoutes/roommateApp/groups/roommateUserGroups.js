@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../db");
+const pool = require("../../../db");
 const router = express.Router()
 
   // USER ID PARAMETER
@@ -13,7 +13,7 @@ const router = express.Router()
   // /api/userGroups/101610594509084827079
   router.get("/:userid", async (req, res) => {
     try {
-        console.log(`here`)
+        // console.log(`here`)
       const allTodos = await pool.query(`SELECT * FROM userGroups WHERE userid = '${req.userid}'`);
   
       res.json(allTodos.rows);

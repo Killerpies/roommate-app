@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../db");
+const pool = require("../../../db");
 const router = express.Router()
 
 
@@ -40,7 +40,7 @@ router.post("/create", async(req,res)=>{
   // /api/groups/1
   router.get("/:groupid", async (req, res) => {
     try {
-        console.log(req.name)
+        // console.log(req.name)
       const allTodos = await pool.query(`SELECT * FROM groups WHERE groupID = '${req.groupid}'`);
   
       res.json(allTodos.rows);
