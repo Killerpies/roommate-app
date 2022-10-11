@@ -82,7 +82,6 @@ export default {
       userID: null,
       groups: [],
       groupInfo: [],
-      catnames: [],
     };
   },
   mounted() {

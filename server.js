@@ -12,9 +12,12 @@ const cors = require('cors');
 app.use(cors());
 
 // routes
-//Financial rout
-const roommateFinancial = require("./apiRoutes/roommateApp/financial/roommateFinancial")
-app.use("/api/cats" ,roommateFinancial)
+//Group transactions route
+const roommateTransactions = require("./apiRoutes/roommateApp/financial/roommateTransactions")
+app.use("/api/groupTransaction" ,roommateTransactions)
+//Specific transactions route
+const transaction = require("./apiRoutes/roommateApp/financial/transactions.js")
+app.use("/api/transaction" ,transaction)
 // Group Routes
 const roommateGroups = require("./apiRoutes/roommateApp/groups/roommateGroups.js")
 app.use("/api/groups" ,roommateGroups)

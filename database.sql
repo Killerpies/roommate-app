@@ -47,8 +47,8 @@ CREATE TABLE userInfo
     transactionAmount decimal,
     purchaseDate DATE
 );
-INSERT INTO userInfo (userID, firstName, lastName)
-    VALUES ('101610594509084827079', 'Justin', 'Sanders')
+INSERT INTO userInfo (userID, firstName, lastName) VALUES ('101610594509084827079', 'Justin', 'Sanders') ON CONFLICT userID DO NOTHING
+
 
 INSERT INTO groups
     (groupName, groupOwnerUserID, groupOwnerUserFirstName, groupOwnerUserLastName) 
