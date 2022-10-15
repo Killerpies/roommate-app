@@ -2,7 +2,6 @@ DELETE FROM groups  WHERE groupName = 'undefined';
 -- CREATE TABLE cat (
 --     name varchar(255)
 -- );
-DROP TABLE IF EXISTS cat;
 DROP TABLE IF EXISTS userGroups;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS groupTransactions;

@@ -123,11 +123,9 @@ export default {
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
       let payload = {
-        userid: this.getUserID,
-        firstname: this.getFirstName,
-        lastname: this.getLastName,
-        phonenumber: null,
-        email: null,
+        userID: this.getUserID,
+        firstName: this.getFirstName,
+        lastName: this.getLastName,
       };
       let url = `/api/userinfo/create`;
       await axios.post(url, payload);

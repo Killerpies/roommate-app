@@ -90,8 +90,24 @@ export default {
     }
     this.getUserID();
     this.getRelatedGroups();
+    this.getCurrentUserInfo();
   },
   methods: {
+    getCurrentUserInfo: async function () {
+      // If user does not exist then will create a user entry
+      let payload = {
+        userID: this.getUserID,
+        firstName: this.getFirstName,
+        lastName: this.getLastName,
+      };
+      let url = `/api/userinfo/create`;
+      await axios.post(url, payload);
+
+      // get user entry from database (Either the brand new one or one thats already created)
+      url = `/api/userInfo/${this.getUserID}`;
+      let response = await axios.get(url);
+      this.currentUserInfo = response.data[0];
+    },
     goToGroup: function () {
       var x = document.getElementById("selectedGroup").value;
       // console.log(x);
