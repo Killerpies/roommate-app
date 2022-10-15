@@ -16,7 +16,7 @@ service postgresql status
 
 # heroku PSQL
 connect to psql terminal
-heroku pg:psql -a roommate-app
+heroku pg:psql -a roommate-ap
 
 
 # Postgresql Commands
