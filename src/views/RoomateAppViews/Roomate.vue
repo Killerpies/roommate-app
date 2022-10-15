@@ -133,7 +133,9 @@ export default {
           // console.log(this.groups[i]);
           let url = `/api/groups/${this.groups[i].usergroupid}`;
           let data = await axios.get(url);
-          tempGroups.push(data.data[0]);
+          if (data.data[0]) {
+            tempGroups.push(data.data[0]);
+          }
         }
         this.groupInfo = tempGroups;
       } catch (error) {

@@ -1,81 +1,46 @@
 <template>
-  <div class="mainGroupTab">
-    <nav
-      v-if="groupInfo"
-      class="navbar navbar-expand-lg navbar-light"
-      style="background-color: #e3f2fd"
-    >
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Group: {{ groupInfo.groupname }}</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
+  <div>
+    <h1>Group Admin</h1>
+    <hr />
+    <div>
+      <section>
+        <h2>Group Settings</h2>
+        <h4>Change Group Name</h4>
+        <h4>Add/Invite Group Members</h4>
+        <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
+        <button class="btn btn-warning" @click="inviteMember">
+          Invite Member
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                aria-current="page"
-                style="cursor: pointer"
-                @click="changeTab('financial')"
-                >Financial</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" style="cursor: pointer">Calendar</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" style="cursor: pointer" href="#">Chores</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                style="cursor: pointer"
-                @click="changeTab('admin')"
-                >Settings</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <adminDashboard
-      v-if="currentTab == 'admin'"
-      :groupID="groupID"
-      :groupMembers="groupUsers"
-    ></adminDashboard>
-    <financialDashboard
-      v-if="currentTab == 'financial'"
-      :groupID="groupID"
-      :groupMembers="groupUsers"
-    ></financialDashboard>
+        <hr />
+      </section>
+      <section>
+        <h2>User Settings</h2>
+        <p>
+          First Name: {{ getFirstName }} <br />
+          Last Name: {{ getLastName }} <br />
+          Phone Number: <br />
+          Email: <br />
+        </p>
+        <hr />
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
-import router from "../../router";
-import financialDashboard from "../../components/roomateApp/financial/FinancialDashboard.vue";
-import adminDashboard from "../../components/roomateApp/admin/GroupAdmin.vue";
+import router from "../../../router";
+// import financialDashboard from "../../components/roomateApp/financial/FinancialDashboard.vue";
 
 export default {
-  name: "groupDashboard",
+  name: "adminDashboard",
   props: {
     groupID: String,
     // likes: Number
   },
   components: {
-    financialDashboard,
-    adminDashboard,
+    // financialDashboard,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
@@ -92,7 +57,7 @@ export default {
   },
   data() {
     return {
-      currentTab: "financial",
+      inviteUserID: null,
       groupInfo: null,
       groupUsers: [],
       currentUserInfo: null,
@@ -117,8 +82,27 @@ export default {
     },
   },
   methods: {
-    changeTab: function (tab) {
-      this.currentTab = tab;
+    inviteMember: async function () {
+      let url = `/api/userinfo/${this.inviteUserID}`;
+      let response = await axios.get(url);
+      console.log(response.data);
+      if (response.data.length > 0) {
+        let payload = {
+          userID: this.inviteUserID,
+          newGroupID: this.groupID,
+          firstName: response.data[0].firstname,
+          lastName: response.data[0].lastname,
+        };
+        console.log(payload);
+        url = `/api/groups/join`;
+        await axios.post(url, payload);
+        alert(
+          `Invited: ${response.data[0].firstname} ${response.data[0].lastname}`
+        );
+      } else {
+        alert(`Could Not find user: ${this.inviteUserID}`);
+      }
+      this.inviteUserID = "";
     },
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
@@ -158,4 +142,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+section {
+  text-align: left;
+  margin: 10px;
+}
+</style>

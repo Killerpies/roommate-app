@@ -1,5 +1,6 @@
 <template>
   <div v-if="groupUsers.length > 0" class="createTransaction">
+    <h1 style="text-align: center">Create a Transaction</h1>
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">Transaction Name</span>
       <input

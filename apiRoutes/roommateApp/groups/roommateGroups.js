@@ -20,7 +20,7 @@ router.post("/create", async(req,res)=>{
       // CREATE USER GROUP THATS ASSOCIATED
       // INSERT INTO userGroups(userID, groupID) VALUES ('101610594509084827079', 1);
       // INSERT INTO userGroups(userID, groupID, userFirstName, userLastName, defaultGroup) VALUES ('101610594509084827079', 1, 'Justin', 'Sanders', True);
-      await pool.query(`UPDATE userGroups SET defaultGroup = false WHERE defaultGroup = true`)
+      await pool.query(`UPDATE userGroups SET defaultGroup = false WHERE userID = ${userID} AND defaultGroup = true`)
       // res.json(editUserGroup)
       const newUserGroup = await pool.query(`INSERT INTO userGroups(userID, groupID, userFirstName, userLastName, defaultGroup) VALUES ('${userID}', ${newGroupID}, '${firstName}', '${lastName}', ${defaultSetting})`)
       res.json(newUserGroup)
@@ -28,6 +28,22 @@ router.post("/create", async(req,res)=>{
       console.error(error.message);
     }
   });
+  // Join A GROUP
+router.post("/join", async(req,res)=>{
+  try{
+    let userID = req.body.userID
+    let newGroupID = req.body.newGroupID
+    let firstName = req.body.firstName
+    let lastName = req.body.lastName
+    let defaultSetting = true
+    await pool.query(`UPDATE userGroups SET defaultGroup = false WHERE userID = ${userID} AND defaultGroup = true`)
+    //{userID}', ${newGroupID}, '${firstName}', '${lastName}', ${defaultSetting}
+    const newUserGroup = await pool.query(`INSERT INTO userGroups(userID, groupID, userFirstName, userLastName, defaultGroup) VALUES ('${userID}', ${newGroupID}, '${firstName}', '${lastName}', ${defaultSetting})`)
+    res.json(newUserGroup)
+  }catch (error) {
+    console.error(error.message);
+  }
+});
   
   // GROUP ID PARAMETER
   router.param('groupid', function(req, res, next, groupid) {
