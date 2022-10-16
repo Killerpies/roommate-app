@@ -41,10 +41,16 @@ const routes = [
     path: '/roommateapp/createTransaction/:groupID',
     name:'createTransaction',
     props: true,
-    component: () => import(/* webpackChunkName: "createTransaction" */ '../views/RoomateAppViews/CreateTransaction.vue')
+    component: () => import(/* webpackChunkName: "createTransaction" */ '../components/roomateApp/financial/CreateTransaction.vue')
+
+  },
+  {
+    path: '/roommateapp/viewTransaction/:groupID/:transactionID',
+    name:'viewTransaction',
+    props: true,
+    component: () => import(/* webpackChunkName: "viewTransaction" */ '../components/roomateApp/financial/ViewTransaction.vue')
 
   }
-  //createTransaction
 ]
 
 const router = createRouter({

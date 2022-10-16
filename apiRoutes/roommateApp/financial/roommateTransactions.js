@@ -22,7 +22,7 @@ router.post("/create", async(req,res)=>{
     // INSERT INTO groupTransactions
     // (groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate)
     // VALUES (1, '101610594509084827079', 'Walmart', 'Bought donuts', 100.50, '2017-03-14')
-    const newGroup = await pool.query(`INSERT INTO groupTransactions(groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate) VALUES ('${groupID}', '${userID}', '${transactionName}', '${transactionDescription}', '${transactionAmount}', '${transactionDate}') RETURNING groupid`)
+    const newGroup = await pool.query(`INSERT INTO groupTransactions(groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate) VALUES ('${groupID}', '${userID}', '${transactionName}', '${transactionDescription}', '${transactionAmount}', '${transactionDate}') RETURNING transactionid`)
     res.json(newGroup)
   }catch (error) {
     console.error(error.message);

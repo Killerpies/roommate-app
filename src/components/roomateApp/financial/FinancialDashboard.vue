@@ -6,35 +6,48 @@
     </button>
   </div>
   <div v-if="dataReady">
-    <table class="table table-hover">
+    <table class="table table-hover table-striped">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Buyer</th>
           <th scope="col">Transaction Name</th>
-          <th scope="col">Description</th>
           <th scope="col">Date</th>
           <th scope="col">Amount</th>
+          <th scope="col">Details</th>
         </tr>
       </thead>
-      <tbody v-for="(item, index) in transactionList" :key="index">
-        <tr>
-          <th scope="row">{{ index }}</th>
+      <tbody>
+        <tr
+          v-for="(item, index) in transactionList"
+          :key="index"
+          v-on:dblclick="viewTransactionDetails(item.transactionid)"
+          style="cursor: pointer"
+        >
           <td>{{ item.firstName }} {{ item.lastName }}</td>
           <td>{{ item.transactionname }}</td>
-          <td>{{ item.transactiondescription }}</td>
           <td>{{ item.purchasedate }}</td>
           <td>${{ item.transactionamount }}</td>
+          <td>
+            <a
+              class="nav-link"
+              style="cursor: pointer; text-decoration: underline"
+              @click="viewTransactionDetails(item.transactionid)"
+              >View Details</a
+            >
+          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div v-if="transactionList.length == 0">
+    <h1>No transactions found</h1>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
-import router from "../../../router";
+import router from "@/router";
 
 export default {
   name: "financialDashboard",
@@ -83,6 +96,13 @@ export default {
     },
   },
   methods: {
+    viewTransactionDetails: function (transactionID) {
+      router.push({
+        name: "viewTransaction",
+        params: { groupID: this.groupID, transactionID: transactionID },
+      });
+      // console.log(transactionID);
+    },
     addTransaction: function () {
       router.push({
         name: "createTransaction",
@@ -93,13 +113,13 @@ export default {
       let url = `/api/groupTransaction/${this.groupID}`;
       let response = await axios.get(url);
       let transactions = response.data;
-      console.log(transactions.length);
+      // console.log(transactions.length);
 
       for (let i = 0; i < transactions.length; i++) {
         let temptransaction = transactions[i];
         url = `/api/userInfo/${transactions[i].userid}`;
         response = await axios.get(url);
-        console.log(response.data);
+        // console.log(response.data);
         temptransaction.firstName = response.data[0].firstname;
         temptransaction.lastName = response.data[0].lastname;
         temptransaction.purchasedate = this.formatDate(

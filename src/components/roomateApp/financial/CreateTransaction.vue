@@ -1,5 +1,8 @@
 <template>
   <div v-if="groupUsers.length > 0" class="createTransaction">
+    <button class="btn btn-warning" @click="backtoFinancial">
+      Back to Financial
+    </button>
     <h1 style="text-align: center">Create a Transaction</h1>
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">Transaction Name</span>
@@ -58,6 +61,7 @@
     <button class="btn btn-warning" @click="createTransaction">
       Create Transaction
     </button>
+
     <br />
     {{ groupUsers[0].percentOwed }}
     <br />
@@ -70,7 +74,7 @@
 <script>
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
-import router from "../../router";
+import router from "@/router";
 
 export default {
   name: "createTransaction",
@@ -122,10 +126,14 @@ export default {
     },
   },
   methods: {
+    backtoFinancial: function () {
+      router.back();
+    },
     createTransaction: async function () {
       let url = `/api/groupTransaction/create`;
-      await axios.post(url, this.transactionDetails);
-      router.back();
+      let response = await axios.post(url, this.transactionDetails);
+      console.log(response.data.rows[0].transactionid);
+      // router.back();
       // console.log(this.getCurrentDate());
     },
     getCurrentDate: function () {
@@ -145,8 +153,8 @@ export default {
       let response = await axios.get(url);
       for (let i = 0; i < response.data.length; i++) {
         let temp = response.data[i];
-        temp.percentOwed = 0;
-        temp.amountOwed = 0;
+        // temp.percentOwed = 0;
+        // temp.amountOwed = 0;
         this.groupUsers.push(temp);
       }
       //   this.groupUsers = response.data;
@@ -158,6 +166,13 @@ export default {
 <style>
 .createTransaction {
   text-align: right;
+  margin: auto;
+  width: 70%;
+  /* border: 3px solid green; */
+  padding: 10px;
+}
+.goBack {
+  text-align: left;
   margin: auto;
   width: 70%;
   /* border: 3px solid green; */

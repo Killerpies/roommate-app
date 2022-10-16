@@ -32,9 +32,6 @@ connect to specific database: \c roommateapp || \c postgres0
 
 list all tables in database: \dt
 
-database username: userDatabase
-database password: 123qwer456
-
 Login:
 sudo -u - postgres psql
 # Useful Videos

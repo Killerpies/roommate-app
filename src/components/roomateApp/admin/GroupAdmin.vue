@@ -31,7 +31,7 @@
 <script>
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
-import router from "../../../router";
+import router from "@/router";
 // import financialDashboard from "../../components/roomateApp/financial/FinancialDashboard.vue";
 
 export default {
@@ -65,12 +65,12 @@ export default {
       currentUserInfo: null,
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getCurrentUserInfo();
-    this.getGroupInfo();
+    await this.getCurrentUserInfo();
+    await this.getGroupInfo();
     this.dataReady = true;
   },
   computed: {

@@ -1,7 +1,6 @@
 <template>
-  <div class="mainGroupTab">
+  <div v-if="dataReady && isAuthenticated" class="mainGroupTab">
     <nav
-      v-if="dataReady"
       class="navbar navbar-expand-lg navbar-light"
       style="background-color: #e3f2fd"
     >
@@ -63,9 +62,9 @@
 <script>
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
-import router from "../../router";
-import financialDashboard from "../../components/roomateApp/financial/FinancialDashboard.vue";
-import adminDashboard from "../../components/roomateApp/admin/GroupAdmin.vue";
+import router from "@/router";
+import financialDashboard from "@/components/roomateApp/financial/FinancialDashboard.vue";
+import adminDashboard from "@/components/roomateApp/admin/GroupAdmin.vue";
 
 export default {
   name: "groupDashboard",
@@ -99,12 +98,12 @@ export default {
       currentUserInfo: null,
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getCurrentUserInfo();
-    this.getGroupInfo();
+    await this.getGroupInfo();
+    await this.getCurrentUserInfo();
     this.dataReady = true;
   },
   computed: {

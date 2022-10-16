@@ -1,12 +1,8 @@
-DELETE FROM groups  WHERE groupName = 'undefined';
--- CREATE TABLE cat (
---     name varchar(255)
--- );
+DROP TABLE IF EXISTS userDebt;
 DROP TABLE IF EXISTS userGroups;
-DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS groupTransactions;
 DROP TABLE IF EXISTS userInfo;
-
+DROP TABLE IF EXISTS groups;
 
 CREATE TABLE groups 
 (
@@ -42,10 +38,31 @@ CREATE TABLE userInfo
     groupID INT REFERENCES groups(groupID),
     userID varchar(255),
     transactionName varchar(255),
-    transactionDescription varchar(255),
+    transactionDescription text,
     transactionAmount decimal,
     purchaseDate DATE
 );
+
+CREATE TABLE userDebt
+(
+    deptID SERIAL PRIMARY KEY,
+    userID varchar(255),
+    groupID INT REFERENCES groups(groupID),
+    transactionID INT REFERENCES groupTransactions(transactionID),
+    percentOwed decimal,
+    amountOwed decimal,
+    userOwedID varchar(255),
+    activeTransaction boolean
+);
+
+
+
+
+
+-- EXAMPLE INSERTS FOR EACH TABLE
+INSERT INTO userDebt (userID, groupID, transactionID, percentOwed, amountOwed, userOwedID, activeTransaction)
+    VALUES ('101610594509084827079', 1, 1, .5, 100, '101610594509084827079', True)
+
 INSERT INTO userInfo (userID, firstName, lastName) VALUES ('101610594509084827079', 'Justin', 'Sanders') ON CONFLICT userID DO NOTHING
 
 
@@ -66,3 +83,8 @@ INSERT INTO groupTransactions
     VALUES (1, '101610594509084827079', 'Walmart', 'Bought donuts', 100.50, '2017-03-14')
 
 UPDATE TABLE userGroups SET defaultGroup = False WHERE defaultGroup = True;
+
+DELETE FROM groups  WHERE groupName = 'undefined';
+-- CREATE TABLE cat (
+--     name varchar(255)
+-- );
