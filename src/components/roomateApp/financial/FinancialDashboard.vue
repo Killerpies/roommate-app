@@ -5,31 +5,26 @@
       Add Transaction
     </button>
   </div>
-  <div>
+  <div v-if="dataReady">
     <table class="table table-hover">
       <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">Buyer</th>
           <th scope="col">Transaction Name</th>
           <th scope="col">Description</th>
           <th scope="col">Date</th>
           <th scope="col">Amount</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-for="(item, index) in transactionList" :key="index">
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>10-11-2022</td>
-          <td>$100</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>10-11-2022</td>
-          <td>$200</td>
+          <th scope="row">{{ index }}</th>
+          <td>{{ item.firstName }} {{ item.lastName }}</td>
+          <td>{{ item.transactionname }}</td>
+          <td>{{ item.transactiondescription }}</td>
+          <td>{{ item.purchasedate }}</td>
+          <td>${{ item.transactionamount }}</td>
         </tr>
       </tbody>
     </table>
@@ -62,8 +57,10 @@ export default {
   },
   data() {
     return {
+      dataReady: false,
       groupInfo: null,
       groupUsers: null,
+      transactionList: [],
     };
   },
   mounted() {
@@ -71,6 +68,8 @@ export default {
       router.push({ name: "home" });
     }
     this.getGroupInfo();
+    this.getTransactions();
+    this.dataReady = true;
   },
   computed: {
     getFirstName() {
@@ -89,6 +88,36 @@ export default {
         name: "createTransaction",
         params: { groupID: this.groupID },
       });
+    },
+    getTransactions: async function () {
+      let url = `/api/groupTransaction/${this.groupID}`;
+      let response = await axios.get(url);
+      let transactions = response.data;
+      console.log(transactions.length);
+
+      for (let i = 0; i < transactions.length; i++) {
+        let temptransaction = transactions[i];
+        url = `/api/userInfo/${transactions[i].userid}`;
+        response = await axios.get(url);
+        console.log(response.data);
+        temptransaction.firstName = response.data[0].firstname;
+        temptransaction.lastName = response.data[0].lastname;
+        temptransaction.purchasedate = this.formatDate(
+          temptransaction.purchasedate
+        );
+        this.transactionList.push(temptransaction);
+      }
+      // = response.data;
+      // console.log(response.data);
+    },
+    formatDate: function (tempDate) {
+      let date = new Date(tempDate);
+      var month = date.getUTCMonth() + 1; //months from 1-12
+      var day = date.getUTCDate();
+      var year = date.getUTCFullYear();
+
+      let newdate = month + "/" + day + "/" + year;
+      return newdate;
     },
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;

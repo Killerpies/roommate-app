@@ -6,14 +6,23 @@ const router = express.Router()
 // CREATE A TRANSACTION
 router.post("/create", async(req,res)=>{
   try{
-    // let firstName = req.body.groupOwnerUserFirstName;
-    // let userID = req.body.groupOwnerUserID
-    // let lastName = req.body.groupOwnerUserLastName;
-    // let defaultSetting = true;
+    console.log(req.body)
+    let groupID = req.body.groupID
+    let userID = req.body.userID
+    let transactionName = req.body.transactionName
+    let transactionDescription = req.body.transactionDescription
+    let transactionAmount = req.body.transactionAmount
+    let transactionDate = req.body.transactionDate
+    // groupID INT REFERENCES groups(groupID),
+    // userID varchar(255),
+    // transactionName varchar(255),
+    // transactionDescription varchar(255),
+    // transactionAmount decimal,
+    // purchaseDate DATE
     // INSERT INTO groupTransactions
     // (groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate)
     // VALUES (1, '101610594509084827079', 'Walmart', 'Bought donuts', 100.50, '2017-03-14')
-    const newGroup = await pool.query(`INSERT INTO groupTransactions(groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate) VALUES ('${req.body.groupName}', '${req.body.groupOwnerUserID}', '${req.body.groupOwnerUserFirstName}', '${req.body.groupOwnerUserLastName}') RETURNING groupid`)
+    const newGroup = await pool.query(`INSERT INTO groupTransactions(groupID, userID, transactionName, transactionDescription, transactionAmount, purchaseDate) VALUES ('${groupID}', '${userID}', '${transactionName}', '${transactionDescription}', '${transactionAmount}', '${transactionDate}') RETURNING groupid`)
     res.json(newGroup)
   }catch (error) {
     console.error(error.message);

@@ -1,7 +1,7 @@
 <template>
   <div class="mainGroupTab">
     <nav
-      v-if="groupInfo"
+      v-if="dataReady"
       class="navbar navbar-expand-lg navbar-light"
       style="background-color: #e3f2fd"
     >
@@ -92,6 +92,7 @@ export default {
   },
   data() {
     return {
+      dataReady: false,
       currentTab: "financial",
       groupInfo: null,
       groupUsers: [],
@@ -104,6 +105,7 @@ export default {
     }
     this.getCurrentUserInfo();
     this.getGroupInfo();
+    this.dataReady = true;
   },
   computed: {
     getFirstName() {

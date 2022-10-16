@@ -4,6 +4,7 @@
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">Transaction Name</span>
       <input
+        v-model="transactionDetails.transactionName"
         type="text"
         class="form-control"
         placeholder="Enter a name for transaction"
@@ -13,12 +14,17 @@
     </div>
     <div class="input-group mb-3">
       <span class="input-group-text">Transaction Description</span>
-      <textarea class="form-control" aria-label="With textarea"></textarea>
+      <textarea
+        v-model="transactionDetails.transactionDescription"
+        class="form-control"
+        aria-label="With textarea"
+      ></textarea>
     </div>
     <div class="input-group mb-3">
       <span class="input-group-text">Total Amount $</span>
       <input
-        type="text"
+        v-model="transactionDetails.transactionAmount"
+        type="number"
         class="form-control"
         aria-label="Amount (to the nearest dollar)"
         placeholder="Enter Transaction Amount"
@@ -49,11 +55,15 @@
       />
       <span class="input-group-text">.00</span>
     </div>
-    {{ groupUsers[0].percentOwed }}
     <button class="btn btn-warning" @click="createTransaction">
       Create Transaction
     </button>
+    <br />
+    {{ groupUsers[0].percentOwed }}
+    <br />
     {{ groupUsers[0].amountOwed }}
+    <br />
+    {{ transactionDetails }}
   </div>
 </template>
 
@@ -82,6 +92,14 @@ export default {
   },
   data() {
     return {
+      transactionDetails: {
+        groupID: this.groupID,
+        userID: this.user.sub.split("|")[1].replace(/\s/g, ""),
+        transactionName: "",
+        transactionDescription: "",
+        transactionAmount: 0,
+        transactionDate: this.getCurrentDate(),
+      },
       groupInfo: null,
       groupUsers: [],
     };
@@ -104,8 +122,20 @@ export default {
     },
   },
   methods: {
-    createTransaction: function () {
+    createTransaction: async function () {
+      let url = `/api/groupTransaction/create`;
+      await axios.post(url, this.transactionDetails);
       router.back();
+      // console.log(this.getCurrentDate());
+    },
+    getCurrentDate: function () {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, "0");
+      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      var yyyy = today.getFullYear();
+
+      today = mm + "/" + dd + "/" + yyyy;
+      return today;
     },
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;

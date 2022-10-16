@@ -3,6 +3,7 @@
     <h1>Create A Group:</h1>
     <div class="formArea">
       <input
+        v-on:keyup.enter="createGroup"
         v-model="groupName"
         class="form-control form-control-lg"
         type="text"

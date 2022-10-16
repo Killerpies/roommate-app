@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div v-if="dataReady">
     <h1>Group Admin</h1>
     <hr />
     <div>
       <section>
         <h2>Group Settings</h2>
         <h4>Change Group Name</h4>
+        <p>Group Name: {{ groupInfo.groupname }}</p>
         <h4>Add/Invite Group Members</h4>
         <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
         <button class="btn btn-warning" @click="inviteMember">
@@ -57,6 +58,7 @@ export default {
   },
   data() {
     return {
+      dataReady: false,
       inviteUserID: null,
       groupInfo: null,
       groupUsers: [],
@@ -69,6 +71,7 @@ export default {
     }
     this.getCurrentUserInfo();
     this.getGroupInfo();
+    this.dataReady = true;
   },
   computed: {
     getFirstName() {
@@ -79,6 +82,9 @@ export default {
     },
     getUserID() {
       return this.user.sub.split("|")[1].replace(/\s/g, "");
+    },
+    getGroupName() {
+      return this.groupInfo.groupname;
     },
   },
   methods: {
