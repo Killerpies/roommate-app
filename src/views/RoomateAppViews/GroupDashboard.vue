@@ -2,7 +2,7 @@
   <div v-if="dataReady && isAuthenticated" class="mainGroupTab">
     <nav
       class="navbar navbar-expand-lg navbar-light"
-      style="background-color: #e3f2fd"
+      style="background-color: #a7c9eb"
     >
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Group: {{ groupInfo.groupname }}</a>

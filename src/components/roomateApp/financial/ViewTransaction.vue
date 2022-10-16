@@ -21,6 +21,16 @@
           {{ transactionDetails.transactiondescription }}
         </p>
       </section>
+      <section class="transactionGroupMembers">
+        <h1>Members debt:</h1>
+        <ul>
+          <li v-for="(item, index) in memberDebt" :key="index">
+            {{ item.firstName }} {{ item.lastName }} - Amount Owed: ${{
+              item.amountowed
+            }}
+          </li>
+        </ul>
+      </section>
     </main>
   </div>
 </template>
@@ -55,6 +65,7 @@ export default {
       groupInfo: null,
       groupUsers: [],
       transactionDetails: {},
+      memberDebt: [],
     };
   },
   mounted() {
@@ -63,6 +74,7 @@ export default {
     // }
     this.getGroupInfo();
     this.getTransaction();
+    this.getDebtAmounts();
     this.dataReady = true;
   },
   computed: {
@@ -80,6 +92,19 @@ export default {
     backtoFinancial: function () {
       router.back();
     },
+    getDebtAmounts: async function () {
+      let url = `/api/userDebt/${this.transactionID}`;
+      let response = await axios.get(url);
+      this.memberDebt = response.data;
+      for (let i = 0; i < this.memberDebt.length; i++) {
+        let url = `/api/userinfo/${this.memberDebt[i].userowedid}`;
+        let response = await axios.get(url);
+        let memberInfo = response.data[0];
+        this.memberDebt[i].firstName = memberInfo.firstname;
+        this.memberDebt[i].lastName = memberInfo.lastname;
+      }
+      console.log(this.memberDebt);
+    },
     getTransaction: async function () {
       let url = `/api/transaction/${this.transactionID}`;
       let response = await axios.get(url);
@@ -92,7 +117,7 @@ export default {
       response = await axios.get(url);
       this.transactionDetails.firstName = response.data[0].firstname;
       this.transactionDetails.lastName = response.data[0].lastname;
-      console.log(this.transactionDetails);
+      // console.log(this.transactionDetails);
     },
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;
@@ -122,6 +147,15 @@ export default {
 
 <style>
 .viewTransaction {
+  margin: 30px;
+  text-align: center;
+  padding-right: 10px;
+}
+ul li {
+  text-align: center;
+  display: inline-block;
+}
+.transactionGroupMembers {
   margin: 30px;
   text-align: center;
   padding-right: 10px;

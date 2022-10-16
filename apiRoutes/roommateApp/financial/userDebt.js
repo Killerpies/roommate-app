@@ -12,7 +12,7 @@ router.post("/create", async(req,res)=>{
     let percentOwed = req.body.percentOwed
     let amountOwed = req.body.amountOwed
     let userOwedID = req.body.userOwedID
-    let activeTransaction= req.body.activeTransaction
+    let activeTransaction = req.body.activeTransaction
     const newGroup = await pool.query(
         `INSERT INTO userDebt
         (userID, groupID, transactionID, percentOwed, amountOwed, userOwedID, activeTransaction) 

@@ -6,7 +6,7 @@ const router = express.Router()
 // CREATE A TRANSACTION
 router.post("/create", async(req,res)=>{
   try{
-    console.log(req.body)
+    // console.log(req.body)
     let groupID = req.body.groupID
     let userID = req.body.userID
     let transactionName = req.body.transactionName

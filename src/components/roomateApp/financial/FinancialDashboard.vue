@@ -1,11 +1,11 @@
 <template>
-  <!-- <div>In the financial dashboard {{ groupID }} {{ groupMembers }}</div> -->
   <div class="createTransaction">
     <button class="btn btn-warning" @click="addTransaction">
       Add Transaction
     </button>
   </div>
   <div v-if="dataReady">
+    <hr />
     <table class="table table-hover table-striped">
       <thead>
         <tr>
@@ -101,7 +101,6 @@ export default {
         name: "viewTransaction",
         params: { groupID: this.groupID, transactionID: transactionID },
       });
-      // console.log(transactionID);
     },
     addTransaction: function () {
       router.push({
@@ -113,7 +112,6 @@ export default {
       let url = `/api/groupTransaction/${this.groupID}`;
       let response = await axios.get(url);
       let transactions = response.data;
-      // console.log(transactions.length);
 
       for (let i = 0; i < transactions.length; i++) {
         let temptransaction = transactions[i];
@@ -127,8 +125,7 @@ export default {
         );
         this.transactionList.push(temptransaction);
       }
-      // = response.data;
-      // console.log(response.data);
+      this.transactionList.reverse();
     },
     formatDate: function (tempDate) {
       let date = new Date(tempDate);

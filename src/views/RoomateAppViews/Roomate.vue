@@ -2,50 +2,61 @@
   <NotLoggedIn v-show="!isAuthenticated"></NotLoggedIn>
   <div class="createJoinGroup" v-if="isAuthenticated">
     <body>
-      <h1>Your Groups</h1>
-      <div class="formArea">
-        <select
-          id="selectedGroup"
-          class="form-select"
-          aria-label="Default select example"
-        >
-          <!-- <option selected>Open this select menu</option> -->
-          <option
-            v-for="(item, index) in groupInfo"
-            :key="index"
-            v-bind:value="item.groupid"
+      <section v-if="groupInfo.length > 0">
+        <h1>Your Groups</h1>
+        <article class="formArea">
+          <select
+            id="selectedGroup"
+            class="form-select"
+            aria-label="Default select example"
           >
-            {{ item.groupname }}
-          </option>
-        </select>
-      </div>
-      <br />
-      <button class="btn btn-warning" @click="goToGroup">Go to group</button>
-      <br />
-      <br />
-      <h1>Create a Group:</h1>
-      <br />
-      <button class="btn btn-warning" @click="createGroup">Create Group</button>
-      <br />
-      <br />
-      <h1>Join a Group:</h1>
-      <p>
-        <strong
-          >Youre ID (Copy This):
-          <br />
-          <br />
-        </strong>
-      </p>
-      <p id="copyUserID">
-        {{ userID }}
-      </p>
-      <br />
-      <p>
-        Send <strong>Your ID</strong> to <strong>Your Group Leader</strong
-        ><br />
-        They can add you to the group from the
-        <strong>Group Settings Page</strong>
-      </p>
+            <!-- <option selected>Open this select menu</option> -->
+            <option
+              v-for="(item, index) in groupInfo"
+              :key="index"
+              v-bind:value="item.groupid"
+            >
+              {{ item.groupname }}
+            </option>
+          </select>
+        </article>
+        <br />
+      </section>
+      <section v-else>
+        <h1>No groups found, create or join one below</h1>
+      </section>
+      <section>
+        <button class="btn btn-secondary" @click="goToGroup">
+          Go to group
+        </button>
+        <br />
+        <br />
+        <h1>Create a Group:</h1>
+        <br />
+        <button class="btn btn-secondary" @click="createGroup">
+          Create Group
+        </button>
+        <br />
+        <br />
+        <h1>Join a Group:</h1>
+        <p>
+          <strong
+            >Youre ID (Copy This):
+            <br />
+            <br />
+          </strong>
+        </p>
+        <p id="copyUserID">
+          {{ userID }}
+        </p>
+        <br />
+        <p>
+          Send <strong>Your ID</strong> to <strong>Your Group Leader</strong
+          ><br />
+          They can add you to the group from the
+          <strong>Group Settings Page</strong>
+        </p>
+      </section>
     </body>
   </div>
 </template>

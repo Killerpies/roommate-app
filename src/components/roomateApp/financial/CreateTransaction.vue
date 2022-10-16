@@ -21,6 +21,7 @@
         v-model="transactionDetails.transactionDescription"
         class="form-control"
         aria-label="With textarea"
+        placeholder="Enter a description"
       ></textarea>
     </div>
     <div class="input-group mb-3">
@@ -101,7 +102,7 @@ export default {
         userID: this.user.sub.split("|")[1].replace(/\s/g, ""),
         transactionName: "",
         transactionDescription: "",
-        transactionAmount: 0,
+        transactionAmount: null,
         transactionDate: this.getCurrentDate(),
       },
       groupInfo: null,
@@ -132,8 +133,24 @@ export default {
     createTransaction: async function () {
       let url = `/api/groupTransaction/create`;
       let response = await axios.post(url, this.transactionDetails);
-      console.log(response.data.rows[0].transactionid);
-      // router.back();
+      let transID = response.data.rows[0].transactionid;
+      console.log(transID);
+
+      url = `/api/userDebt/create`;
+      for (let i = 0; i < this.groupUsers.length; i++) {
+        let payload = {
+          userID: this.getUserID,
+          groupID: this.groupID,
+          transactionID: transID,
+          percentOwed: this.groupUsers[i].percentOwed,
+          amountOwed: this.groupUsers[i].amountOwed,
+          userOwedID: this.groupUsers[i].userid,
+          activeTransaction: true,
+        };
+        await axios.post(url, payload);
+        // console.log(payload);
+      }
+      router.back();
       // console.log(this.getCurrentDate());
     },
     getCurrentDate: function () {

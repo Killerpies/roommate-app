@@ -3,9 +3,9 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav> -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">JustinSanders.org</a>
+      <a class="navbar-brand" href="#">The Roommate App</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -94,5 +94,17 @@ nav {
       color: #42b983;
     }
   }
+}
+html body {
+  background-color: #daebf7;
+}
+
+@font-face {
+  font-family: myFirstFont;
+  src: url("../fonts/Raleway/Raleway-VariableFont_wght.ttf");
+}
+
+html div body {
+  font-family: myFirstFont;
 }
 </style>

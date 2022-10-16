@@ -91,7 +91,7 @@ export default {
     inviteMember: async function () {
       let url = `/api/userinfo/${this.inviteUserID}`;
       let response = await axios.get(url);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.length > 0) {
         let payload = {
           userID: this.inviteUserID,
@@ -99,7 +99,7 @@ export default {
           firstName: response.data[0].firstname,
           lastName: response.data[0].lastname,
         };
-        console.log(payload);
+        // console.log(payload);
         url = `/api/groups/join`;
         await axios.post(url, payload);
         alert(
