@@ -14,7 +14,6 @@ const apiClient = axios.create({
 export default {
   /* with pagination */
   getUsers() {
-    // console.log(process.env.DATABASE_URL);
     return apiClient.get('/users');
   },
 };

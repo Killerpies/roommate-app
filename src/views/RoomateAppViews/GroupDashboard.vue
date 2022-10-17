@@ -123,18 +123,20 @@ export default {
     },
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
-      let payload = {
-        userID: this.getUserID,
-        firstName: this.getFirstName,
-        lastName: this.getLastName,
-      };
-      let url = `/api/userinfo/create`;
-      await axios.post(url, payload);
+      if (this.isAuthenticated) {
+        let payload = {
+          userID: this.getUserID,
+          firstName: this.getFirstName,
+          lastName: this.getLastName,
+        };
+        let url = `/api/userinfo/create`;
+        await axios.post(url, payload);
 
-      // get user entry from database (Either the brand new one or one thats already created)
-      url = `/api/userInfo/${this.getUserID}`;
-      let response = await axios.get(url);
-      this.currentUserInfo = response.data[0];
+        // get user entry from database (Either the brand new one or one thats already created)
+        url = `/api/userInfo/${this.getUserID}`;
+        let response = await axios.get(url);
+        this.currentUserInfo = response.data[0];
+      }
     },
     getGroupInfo: async function () {
       // gets groupID, groupname, groupowner

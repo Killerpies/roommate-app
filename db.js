@@ -20,15 +20,3 @@ const pool = new Pool(process.env.NODE_ENV === "production" ? proConfig : devCon
 
 module.exports = pool;
 
-
-// Connection to the database
-// const { Client } = require('pg');
-// const client = new Client(process.env.NODE_ENV === "production" ? proConfig : devConfig);
-// client.connect();
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//   if (err) throw err;
-//   for (let row of res.rows) {
-//     console.log(JSON.stringify(row));
-//   }
-//   client.end();
-// });

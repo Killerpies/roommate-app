@@ -14,7 +14,6 @@ const router = express.Router()
   // /api/userGroups/101610594509084827079
   router.get("/:groupid", async (req, res) => {
     try {
-        console.log(req.groupid)
       const allTodos = await pool.query(`SELECT * FROM usergroups WHERE groupID = ${req.groupid}`);
   
       res.json(allTodos.rows);

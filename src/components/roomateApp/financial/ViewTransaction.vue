@@ -28,6 +28,7 @@
             {{ item.firstName }} {{ item.lastName }} - Amount Owed: ${{
               item.amountowed
             }}
+            - Amount Payed: ${{ item.amountpayed }}
           </li>
         </ul>
       </section>
@@ -68,13 +69,13 @@ export default {
       memberDebt: [],
     };
   },
-  mounted() {
+  async mounted() {
     // if (!this.isAuthenticated) {
     //   router.push({ name: "home" });
     // }
-    this.getGroupInfo();
-    this.getTransaction();
-    this.getDebtAmounts();
+    await this.getGroupInfo();
+    await this.getTransaction();
+    await this.getDebtAmounts();
     this.dataReady = true;
   },
   computed: {
@@ -103,21 +104,19 @@ export default {
         this.memberDebt[i].firstName = memberInfo.firstname;
         this.memberDebt[i].lastName = memberInfo.lastname;
       }
-      console.log(this.memberDebt);
     },
     getTransaction: async function () {
       let url = `/api/transaction/${this.transactionID}`;
       let response = await axios.get(url);
       let transaction = response.data[0];
-      this.transactionDetails = transaction;
-      this.transactionDetails.purchasedate = this.formatDate(
-        transaction.purchasedate
-      );
+      let tempTrans = {};
+      tempTrans = transaction;
+      tempTrans.purchasedate = this.formatDate(transaction.purchasedate);
       url = `/api/userInfo/${transaction.userid}`;
-      response = await axios.get(url);
-      this.transactionDetails.firstName = response.data[0].firstname;
-      this.transactionDetails.lastName = response.data[0].lastname;
-      // console.log(this.transactionDetails);
+      let result = await axios.get(url);
+      tempTrans.firstName = result.data[0].firstname;
+      tempTrans.lastName = result.data[0].lastname;
+      this.transactionDetails = tempTrans;
     },
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;

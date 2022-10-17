@@ -7,7 +7,6 @@ export default {
         let url = `/api/groups/${groupID}`;
         let result = await axios.get(url);
         let groupInfo = result.data[0];
-        console.log(groupInfo)
         return groupInfo
     },
 
@@ -24,7 +23,6 @@ export default {
             };
             groupUsers.push(tempUser);
         }
-        console.log(groupUsers)
         return groupUsers
         }
 }

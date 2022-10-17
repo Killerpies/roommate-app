@@ -1,14 +1,11 @@
 <template>
   <div>
-    <h1>Your Groups Transactions</h1>
+    <h1>Money You Owe</h1>
   </div>
   <div class="row">
     <div class="col">
-      <button class="btn btn-warning" @click="viewDebt">View My Debt</button>
-    </div>
-    <div class="col">
-      <button class="btn btn-warning" @click="addTransaction">
-        Add Transaction
+      <button class="btn btn-warning" @click="backtoFinancial">
+        Back to financial
       </button>
     </div>
   </div>
@@ -19,37 +16,51 @@
       <thead>
         <tr>
           <th scope="col">Date</th>
-          <th scope="col">Buyer</th>
+          <th scope="col">Payed By</th>
           <th scope="col">Transaction Name</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Details</th>
+          <th scope="col">Amount Owed</th>
+          <th scope="col">View Transaction</th>
+          <th scope="col">Pay Debt</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(item, index) in transactionList"
-          :key="index"
-          v-on:dblclick="viewTransactionDetails(item.transactionid)"
-          style="cursor: pointer"
-        >
-          <td>{{ item.purchasedate }}</td>
-          <td>{{ item.firstName }} {{ item.lastName }}</td>
-          <td>{{ item.transactionname }}</td>
+        <tr v-for="item in debtTransactionList" :key="item.debtid">
+          <td v-if="item.activetransaction">{{ item.purchasedate }}</td>
+          <td v-if="item.activetransaction">
+            {{ item.firstName }} {{ item.lastName }}
+          </td>
+          <td v-if="item.activetransaction">{{ item.transactionname }}</td>
 
-          <td>${{ item.transactionamount }}</td>
+          <td v-if="item.activetransaction">${{ item.currentAmountOwed }}</td>
           <td>
             <a
+              v-if="item.activetransaction"
               class="nav-link"
               style="cursor: pointer; text-decoration: underline"
               @click="viewTransactionDetails(item.transactionid)"
               >View Details</a
             >
           </td>
+          <td v-if="item.activetransaction">
+            <a
+              class="nav-link"
+              style="cursor: pointer; text-decoration: underline"
+              @click="
+                payTransaction(
+                  item.deptid,
+                  item.userid
+                  //   item.amountowed,
+                  //   item.amountpayed
+                )
+              "
+              >Pay off</a
+            >
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div v-if="transactionList.length == 0">
+  <div v-if="debtTransactionList.length == 0">
     <h1>No transactions found</h1>
   </div>
 </template>
@@ -60,7 +71,7 @@ import { useAuth0 } from "@auth0/auth0-vue";
 import router from "@/router";
 
 export default {
-  name: "financialDashboard",
+  name: "viewDebt",
   props: {
     groupID: String,
     groupMembers: Array,
@@ -83,7 +94,7 @@ export default {
       dataReady: false,
       groupInfo: null,
       groupUsers: null,
-      transactionList: [],
+      debtTransactionList: [],
     };
   },
   mounted() {
@@ -106,11 +117,8 @@ export default {
     },
   },
   methods: {
-    viewDebt: function () {
-      router.push({
-        name: "viewDebt",
-        params: { groupID: this.groupID },
-      });
+    backtoFinancial: function () {
+      router.back();
     },
     viewTransactionDetails: function (transactionID) {
       router.push({
@@ -118,29 +126,46 @@ export default {
         params: { groupID: this.groupID, transactionID: transactionID },
       });
     },
-    addTransaction: function () {
-      router.push({
-        name: "createTransaction",
-        params: { groupID: this.groupID },
-      });
-    },
     getTransactions: async function () {
-      let url = `/api/groupTransaction/${this.groupID}`;
+      let url = `/api/specificUserDebt/${this.getUserID}`;
       let response = await axios.get(url);
       let transactions = response.data;
-
       for (let i = 0; i < transactions.length; i++) {
-        let temptransaction = transactions[i];
-        url = `/api/userInfo/${transactions[i].userid}`;
-        response = await axios.get(url);
-        temptransaction.firstName = response.data[0].firstname;
-        temptransaction.lastName = response.data[0].lastname;
-        temptransaction.purchasedate = this.formatDate(
-          temptransaction.purchasedate
+        let tempTransaction = {};
+        tempTransaction = transactions[i];
+        let url = `/api/transaction/${tempTransaction.transactionid}`;
+        let result = await axios.get(url);
+        tempTransaction.transactionname = result.data[0].transactionname;
+        tempTransaction.transactionamount = result.data[0].transactionamount;
+        tempTransaction.purchasedate = this.formatDate(
+          result.data[0].purchasedate
         );
-        this.transactionList.push(temptransaction);
+        tempTransaction.currentAmountOwed =
+          tempTransaction.amountowed - tempTransaction.amountpayed;
+        url = `/api/userinfo/${tempTransaction.userid}`;
+        response = await axios.get(url);
+        tempTransaction.firstName = response.data[0].firstname;
+        tempTransaction.lastName = response.data[0].lastname;
+        this.debtTransactionList.push(transactions[i]);
       }
-      this.transactionList.reverse();
+
+      this.debtTransactionList.reverse();
+    },
+
+    payTransaction: async function (debtID, userID) {
+      let url = `/api/specificUserDebt/changeDebt`;
+      let payload = {
+        debtID: debtID,
+        userID: userID,
+        amountowed: 0,
+        amountpayed: 0,
+        activetransaction: false,
+      };
+      await axios.post(url, payload);
+      let index = this.debtTransactionList.findIndex(
+        (x) => x.deptid === debtID
+      );
+      this.debtTransactionList.splice(index, 1);
     },
     formatDate: function (tempDate) {
       let date = new Date(tempDate);

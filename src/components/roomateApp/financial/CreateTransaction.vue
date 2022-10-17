@@ -134,7 +134,6 @@ export default {
       let url = `/api/groupTransaction/create`;
       let response = await axios.post(url, this.transactionDetails);
       let transID = response.data.rows[0].transactionid;
-      console.log(transID);
 
       url = `/api/userDebt/create`;
       for (let i = 0; i < this.groupUsers.length; i++) {
@@ -145,13 +144,12 @@ export default {
           percentOwed: this.groupUsers[i].percentOwed,
           amountOwed: this.groupUsers[i].amountOwed,
           userOwedID: this.groupUsers[i].userid,
+          amountPayed: 0,
           activeTransaction: true,
         };
         await axios.post(url, payload);
-        // console.log(payload);
       }
       router.back();
-      // console.log(this.getCurrentDate());
     },
     getCurrentDate: function () {
       var today = new Date();

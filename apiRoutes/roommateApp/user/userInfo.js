@@ -25,7 +25,6 @@ router.post("/create", async(req,res)=>{
   });
   router.get("/:userid", async (req, res) => {
     try {
-        // console.log(`here`)
       const allTodos = await pool.query(`SELECT * FROM userInfo WHERE userid = '${req.userid}'`);
   
       res.json(allTodos.rows);
@@ -49,7 +48,6 @@ router.post("/create", async(req,res)=>{
 
   router.post("/:userid", async (req, res) => {
     try {
-        // console.log(`here`)
       const allTodos = await pool.query(`SELECT * FROM userInfo WHERE userid = '${req.userid}'`);
   
       res.json(allTodos.rows);

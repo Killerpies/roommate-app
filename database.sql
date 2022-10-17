@@ -51,6 +51,7 @@ CREATE TABLE userDebt
     transactionID INT REFERENCES groupTransactions(transactionID),
     percentOwed decimal,
     amountOwed decimal,
+    amountPayed decimal,
     userOwedID varchar(255),
     activeTransaction boolean
 );
@@ -60,8 +61,8 @@ CREATE TABLE userDebt
 
 
 -- EXAMPLE INSERTS FOR EACH TABLE
-INSERT INTO userDebt (userID, groupID, transactionID, percentOwed, amountOwed, userOwedID, activeTransaction)
-    VALUES ('101610594509084827079', 1, 1, .5, 100, '101610594509084827079', True)
+INSERT INTO userDebt (userID, groupID, transactionID, percentOwed, amountOwed,amountPayed ,userOwedID, activeTransaction)
+    VALUES ('101610594509084827079', 1, 1, .5, 100, 0,'101610594509084827079', True)
 
 INSERT INTO userInfo (userID, firstName, lastName) VALUES ('101610594509084827079', 'Justin', 'Sanders') ON CONFLICT userID DO NOTHING
 

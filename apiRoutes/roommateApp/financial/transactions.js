@@ -12,7 +12,6 @@ router.param('transactionid', function(req, res, next, transactionid) {
 // /api/groups/1
 router.get("/:transactionid", async (req, res) => {
   try {
-      // console.log(req.name)
     const allTodos = await pool.query(`SELECT * FROM groupTransactions WHERE transactionID = '${req.transactionid}'`);
 
     res.json(allTodos.rows);

@@ -50,6 +50,13 @@ const routes = [
     props: true,
     component: () => import(/* webpackChunkName: "viewTransaction" */ '../components/roomateApp/financial/ViewTransaction.vue')
 
+  },
+  {
+    path: '/roommateapp/viewDebt/:groupID',
+    name:'viewDebt',
+    props: true,
+    component: () => import(/* webpackChunkName: "viewDebt" */ '../components/roomateApp/financial/ViewDebt.vue')
+
   }
 ]
 

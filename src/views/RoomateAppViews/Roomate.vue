@@ -21,14 +21,14 @@
           </select>
         </article>
         <br />
+        <button class="btn btn-secondary" @click="goToGroup">
+          Go to group
+        </button>
       </section>
       <section v-else>
         <h1>No groups found, create or join one below</h1>
       </section>
       <section>
-        <button class="btn btn-secondary" @click="goToGroup">
-          Go to group
-        </button>
         <br />
         <br />
         <h1>Create a Group:</h1>
@@ -106,22 +106,23 @@ export default {
   methods: {
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
-      let payload = {
-        userID: this.getUserID,
-        firstName: this.getFirstName,
-        lastName: this.getLastName,
-      };
-      let url = `/api/userinfo/create`;
-      await axios.post(url, payload);
+      if (this.isAuthenticated) {
+        let payload = {
+          userID: this.getUserID,
+          firstName: this.getFirstName,
+          lastName: this.getLastName,
+        };
+        let url = `/api/userinfo/create`;
+        await axios.post(url, payload);
 
-      // get user entry from database (Either the brand new one or one thats already created)
-      url = `/api/userInfo/${this.getUserID}`;
-      let response = await axios.get(url);
-      this.currentUserInfo = response.data[0];
+        // get user entry from database (Either the brand new one or one thats already created)
+        url = `/api/userInfo/${this.getUserID}`;
+        let response = await axios.get(url);
+        this.currentUserInfo = response.data[0];
+      }
     },
     goToGroup: function () {
       var x = document.getElementById("selectedGroup").value;
-      // console.log(x);
       router.push({ name: "groupDashboard", params: { groupID: x } });
     },
     createGroup: function () {
@@ -157,7 +158,6 @@ export default {
       try {
         let tempGroups = [];
         for (let i = 0; i < this.groups.length; i++) {
-          // console.log(this.groups[i]);
           let url = `/api/groups/${this.groups[i].usergroupid}`;
           let data = await axios.get(url);
           if (data.data[0]) {

@@ -21,6 +21,9 @@ app.use("/api/transaction" ,transaction)
 // User Debt Routes
 const userdebt = require("./apiRoutes/roommateApp/financial/userDebt.js")
 app.use("/api/userDebt" ,userdebt)
+// Specific User Debt
+const userdebtspecific = require("./apiRoutes/roommateApp/financial/userDebtSpecific.js")
+app.use("/api/specificUserDebt" ,userdebtspecific)
 // Group Routes
 const roommateGroups = require("./apiRoutes/roommateApp/groups/roommateGroups.js")
 app.use("/api/groups" ,roommateGroups)

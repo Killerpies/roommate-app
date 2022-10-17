@@ -10,7 +10,6 @@ router.post("/create", async(req,res)=>{
       // CREATE THE GROUP
       let firstName = req.body.groupOwnerUserFirstName;
       let userID = req.body.groupOwnerUserID
-      // console.log(firstName)
       let lastName = req.body.groupOwnerUserLastName;
       let defaultSetting = true;
       const newGroup = await pool.query(`INSERT INTO groups(groupName, groupOwnerUserID, groupOwnerUserFirstName, groupOwnerUserLastName) VALUES ('${req.body.groupName}', '${req.body.groupOwnerUserID}', '${req.body.groupOwnerUserFirstName}', '${req.body.groupOwnerUserLastName}') RETURNING groupid`)
@@ -56,7 +55,7 @@ router.post("/join", async(req,res)=>{
   // /api/groups/1
   router.get("/:groupid", async (req, res) => {
     try {
-        // console.log(req.name)
+
       const allTodos = await pool.query(`SELECT * FROM groups WHERE groupID = '${req.groupid}'`);
   
       res.json(allTodos.rows);
