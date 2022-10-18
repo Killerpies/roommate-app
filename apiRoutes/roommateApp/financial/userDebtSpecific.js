@@ -29,7 +29,7 @@ router.post("/changeDebt", async (req, res) => {
 router.get("/:transactionid", async (req, res) => {
   try {
       let thisisTrue = true
-    const allTodos = await pool.query(`SELECT * FROM userDebt WHERE userid = '${req.transactionid}' AND activetransaction = '${thisisTrue}'`);
+    const allTodos = await pool.query(`SELECT * FROM userDebt WHERE userOwedID = '${req.transactionid}' AND activetransaction = '${thisisTrue}'`);
 
     res.json(allTodos.rows);
   } catch (err) {

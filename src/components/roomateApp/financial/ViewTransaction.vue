@@ -21,9 +21,9 @@
           {{ transactionDetails.transactiondescription }}
         </p>
       </section>
-      <section class="transactionGroupMembers">
+      <section class="viewTransaction">
         <h1>Members debt:</h1>
-        <ul>
+        <ul class="transactionGroupMembers">
           <li v-for="(item, index) in memberDebt" :key="index">
             {{ item.firstName }} {{ item.lastName }} - Amount Owed: ${{
               item.amountowed
@@ -150,14 +150,12 @@ export default {
   text-align: center;
   padding-right: 10px;
 }
-ul li {
-  text-align: center;
-  display: inline-block;
-}
 .transactionGroupMembers {
   margin: 30px;
   text-align: center;
   padding-right: 10px;
+  display: inline-block;
+  text-align: left;
 }
 .goBack {
   margin: 10px;

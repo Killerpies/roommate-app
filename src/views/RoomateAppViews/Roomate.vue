@@ -47,7 +47,7 @@
           </strong>
         </p>
         <p id="copyUserID">
-          {{ userID }}
+          {{ getUserID }}
         </p>
         <br />
         <p>
@@ -95,13 +95,24 @@ export default {
       groupInfo: [],
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getUserID();
+
     this.getRelatedGroups();
     this.getCurrentUserInfo();
+  },
+  computed: {
+    getFirstName() {
+      return this.user.given_name;
+    },
+    getLastName() {
+      return this.user.family_name;
+    },
+    getUserID() {
+      return this.user.sub.split("|")[1].replace(/\s/g, "");
+    },
   },
   methods: {
     getCurrentUserInfo: async function () {
@@ -142,14 +153,9 @@ export default {
       // Alert the copied text
       alert("Copied the text: " + copyText.value);
     },
-    getUserID: function () {
-      let tempid = this.user.sub.split("|")[1].replace(/\s/g, "");
-      this.userID = tempid;
-      return this.userID;
-    },
     getRelatedGroups: async function () {
       try {
-        let url = `/api/usergroups/${this.getUserID()}`;
+        let url = `/api/usergroups/${this.getUserID}`;
         let data = await axios.get(url);
         this.groups = data.data;
       } catch (error) {
@@ -158,7 +164,7 @@ export default {
       try {
         let tempGroups = [];
         for (let i = 0; i < this.groups.length; i++) {
-          let url = `/api/groups/${this.groups[i].usergroupid}`;
+          let url = `/api/groups/${this.groups[i].groupid}`;
           let data = await axios.get(url);
           if (data.data[0]) {
             tempGroups.push(data.data[0]);

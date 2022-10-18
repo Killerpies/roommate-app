@@ -34,8 +34,8 @@ router.param('transactionid', function(req, res, next, transactionid) {
 // GET debt  RELATED TO transactionid
 router.get("/:transactionid", async (req, res) => {
   try {
-      let thisisTrue = true
-    const allTodos = await pool.query(`SELECT * FROM userDebt WHERE transactionid = '${req.transactionid}' AND activetransaction = '${thisisTrue}'`);
+      // let thisisTrue = true
+    const allTodos = await pool.query(`SELECT * FROM userDebt WHERE transactionid = '${req.transactionid}'`);
 
     res.json(allTodos.rows);
   } catch (err) {

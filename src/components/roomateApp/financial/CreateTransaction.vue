@@ -47,7 +47,7 @@
         type="number"
         class="form-control"
         aria-label="Amount (to the nearest dollar)"
-        placeholder="Enter Percentage Owed"
+        placeholder="Enter Percentage Owed %"
         v-model="groupUsers[index].percentOwed"
       />
       <input
@@ -63,12 +63,12 @@
       Create Transaction
     </button>
 
-    <br />
+    <!-- <br />
     {{ groupUsers[0].percentOwed }}
     <br />
     {{ groupUsers[0].amountOwed }}
     <br />
-    {{ transactionDetails }}
+    {{ transactionDetails }} -->
   </div>
 </template>
 
@@ -147,6 +147,10 @@ export default {
           amountPayed: 0,
           activeTransaction: true,
         };
+        if (this.groupUsers[i].userid == this.getUserID) {
+          payload.amountPayed = this.groupUsers[i].amountOwed;
+          payload.activeTransaction = false;
+        }
         await axios.post(url, payload);
       }
       router.back();
@@ -178,7 +182,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .createTransaction {
   text-align: right;
   margin: auto;

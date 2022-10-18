@@ -48,9 +48,9 @@
               @click="
                 payTransaction(
                   item.deptid,
-                  item.userid
-                  //   item.amountowed,
-                  //   item.amountpayed
+                  item.userid,
+                  item.amountowed,
+                  item.amountpayed
                 )
               "
               >Pay off</a
@@ -151,14 +151,14 @@ export default {
 
       this.debtTransactionList.reverse();
     },
-
-    payTransaction: async function (debtID, userID) {
+    //eslint-disable-next-line
+    payTransaction: async function (debtID, userID, amountowed, amountpayed) {
       let url = `/api/specificUserDebt/changeDebt`;
       let payload = {
         debtID: debtID,
         userID: userID,
-        amountowed: 0,
-        amountpayed: 0,
+        amountowed: amountowed,
+        amountpayed: amountowed,
         activetransaction: false,
       };
       await axios.post(url, payload);
