@@ -146,7 +146,9 @@ export default {
         response = await axios.get(url);
         tempTransaction.firstName = response.data[0].firstname;
         tempTransaction.lastName = response.data[0].lastname;
-        this.debtTransactionList.push(transactions[i]);
+        if (tempTransaction.groupid == this.groupID) {
+          this.debtTransactionList.push(transactions[i]);
+        }
       }
 
       this.debtTransactionList.reverse();
