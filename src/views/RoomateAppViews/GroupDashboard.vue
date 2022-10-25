@@ -121,6 +121,11 @@ export default {
     changeTab: function (tab) {
       this.currentTab = tab;
     },
+    /**
+     * This function takes a users info given from their account and adds it to the database
+     * If the user already exists then it will just pull the old info
+     * If the user does not exist then it adds them to the database
+     */
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
       if (this.isAuthenticated) {
@@ -138,6 +143,10 @@ export default {
         this.currentUserInfo = response.data[0];
       }
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       // gets groupID, groupname, groupowner
       let url = `/api/groups/${this.groupID}`;

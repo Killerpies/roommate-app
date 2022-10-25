@@ -117,15 +117,31 @@ export default {
     },
   },
   methods: {
+    /**
+     * Routes user back to last viewed component
+     * Should be Financial
+     */
     backtoFinancial: function () {
       router.back();
     },
+    /**
+     * Routes user to viewTransactionDashboard
+     * Passes groupId, TransactionID allong to the component
+     * @param {*} transactionID Id of transaction you would like to view
+     */
     viewTransactionDetails: function (transactionID) {
       router.push({
         name: "viewTransaction",
         params: { groupID: this.groupID, transactionID: transactionID },
       });
     },
+    /**
+     * Get active debt associated with this user
+     * For each debt get transactionID for each, pull data together
+     * For each debt get userInfo associated with each transaction, pull data together
+     * Assign all this data into list of objects
+     * set this.debtTransactionList to the new list
+     */
     getTransactions: async function () {
       let url = `/api/specificUserDebt/${this.getUserID}`;
       let response = await axios.get(url);
@@ -153,8 +169,17 @@ export default {
 
       this.debtTransactionList.reverse();
     },
+    /**
+     *
+     * Copies each value into a temporary object
+     * Posts to server
+     * Then removes the item from the list on the component
+     * @param {*} debtID id of the debt in table
+     * @param {*} userID users id for transaction
+     * @param {*} amountowed amount user owed for this transaction
+     */
     //eslint-disable-next-line
-    payTransaction: async function (debtID, userID, amountowed, amountpayed) {
+    payTransaction: async function (debtID, userID, amountowed) {
       let url = `/api/specificUserDebt/changeDebt`;
       let payload = {
         debtID: debtID,
@@ -169,6 +194,11 @@ export default {
       );
       this.debtTransactionList.splice(index, 1);
     },
+    /**
+     *
+     * Converts string date to proper format (M/D/Y)
+     * @param {*} tempDate string date
+     */
     formatDate: function (tempDate) {
       let date = new Date(tempDate);
       var month = date.getUTCMonth() + 1; //months from 1-12
@@ -178,6 +208,10 @@ export default {
       let newdate = month + "/" + day + "/" + year;
       return newdate;
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;
       this.groupInfo = await axios.get(url);

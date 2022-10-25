@@ -4,71 +4,72 @@
       Back to Financial
     </button>
     <h1 style="text-align: center">Create a Transaction</h1>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">Transaction Name</span>
-      <input
-        v-model="transactionDetails.transactionName"
-        type="text"
-        class="form-control"
-        placeholder="Enter a name for transaction"
-        aria-label="Username"
-        aria-describedby="basic-addon1"
-      />
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text">Transaction Description</span>
-      <textarea
-        v-model="transactionDetails.transactionDescription"
-        class="form-control"
-        aria-label="With textarea"
-        placeholder="Enter a description"
-      ></textarea>
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text">Total Amount $</span>
-      <input
-        v-model="transactionDetails.transactionAmount"
-        type="number"
-        class="form-control"
-        aria-label="Amount (to the nearest dollar)"
-        placeholder="Enter Transaction Amount"
-      />
-      <span class="input-group-text">.00</span>
-    </div>
-    <div
-      v-for="(item, index) in groupUsers"
-      :key="index"
-      class="input-group mb-3"
-    >
-      <span class="input-group-text"
-        >{{ item.userfirstname }} {{ item.userlastname }}</span
+    <form v-on:submit.prevent="createTransaction">
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Transaction Name</span>
+        <input
+          v-model="transactionDetails.transactionName"
+          type="text"
+          class="form-control"
+          placeholder="Enter a name for transaction"
+          aria-label="Username"
+          aria-describedby="basic-addon1"
+          :state="validateMe('transactionName')"
+          required
+        />
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Transaction Description</span>
+        <textarea
+          v-model="transactionDetails.transactionDescription"
+          class="form-control"
+          aria-label="With textarea"
+          placeholder="Enter a description"
+        ></textarea>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Total Amount $</span>
+        <input
+          v-model="transactionDetails.transactionAmount"
+          type="number"
+          class="form-control"
+          aria-label="Amount (to the nearest dollar)"
+          placeholder="Enter Transaction Amount"
+          :state="validateMe('totalAmount')"
+          required
+        />
+        <span class="input-group-text">.00</span>
+      </div>
+      <div
+        v-for="(item, index) in groupUsers"
+        :key="index"
+        class="input-group mb-3"
       >
-      <input
-        type="number"
-        class="form-control"
-        aria-label="Amount (to the nearest dollar)"
-        placeholder="Enter Percentage Owed %"
-        v-model="groupUsers[index].percentOwed"
-      />
-      <input
-        type="number"
-        class="form-control"
-        aria-label="Amount (to the nearest dollar)"
-        placeholder="Enter Amount $"
-        v-model="groupUsers[index].amountOwed"
-      />
-      <span class="input-group-text">.00</span>
-    </div>
-    <button class="btn btn-warning" @click="createTransaction">
-      Create Transaction
-    </button>
-
-    <!-- <br />
-    {{ groupUsers[0].percentOwed }}
-    <br />
-    {{ groupUsers[0].amountOwed }}
-    <br />
-    {{ transactionDetails }} -->
+        <span class="input-group-text"
+          >{{ item.userfirstname }} {{ item.userlastname }}</span
+        >
+        <input
+          type="number"
+          class="form-control"
+          aria-label="Amount (to the nearest dollar)"
+          placeholder="Enter Percentage Owed %"
+          v-model="groupUsers[index].percentOwed"
+          :state="validateMe('userPercentOwed')"
+          required
+        />
+        <input
+          type="number"
+          class="form-control"
+          aria-label="Amount (to the nearest dollar)"
+          placeholder="Enter Amount $"
+          v-model="groupUsers[index].amountOwed"
+          :state="validateMe('userAmountOwed')"
+          required
+        />
+        <span class="input-group-text">.00</span>
+      </div>
+      <button class="btn btn-warning">Create Transaction</button>
+    </form>
   </div>
 </template>
 
@@ -127,10 +128,21 @@ export default {
     },
   },
   methods: {
+    /**
+     * Routes back to the last page visited
+     * Should be financial
+     */
     backtoFinancial: function () {
       router.back();
     },
-    createTransaction: async function () {
+    /**
+     * Takes this transactions details and posts them to the server
+     * Then takes each users debt adds this too an object
+     * Pushes those objects into a list and sends them to the server
+     * @param {*} event Event returned from form to prevent form from refreshing on button press
+     */
+    createTransaction: async function (event) {
+      event.preventDefault;
       let url = `/api/groupTransaction/create`;
       let response = await axios.post(url, this.transactionDetails);
       let transID = response.data.rows[0].transactionid;
@@ -155,6 +167,9 @@ export default {
       }
       router.back();
     },
+    /**
+     * Returns todays date
+     */
     getCurrentDate: function () {
       var today = new Date();
       var dd = String(today.getDate()).padStart(2, "0");
@@ -164,6 +179,10 @@ export default {
       today = mm + "/" + dd + "/" + yyyy;
       return today;
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;
       this.groupInfo = await axios.get(url);
@@ -172,11 +191,73 @@ export default {
       let response = await axios.get(url);
       for (let i = 0; i < response.data.length; i++) {
         let temp = response.data[i];
-        // temp.percentOwed = 0;
-        // temp.amountOwed = 0;
         this.groupUsers.push(temp);
       }
       //   this.groupUsers = response.data;
+    },
+    /**
+     * Checks to see if all users have valid amount owed attached to their account
+     */
+    validateUserAmountOwed: function () {
+      let state = true;
+      for (let i = 0; i < this.groupUsers.length; i++) {
+        if (
+          this.groupUsers[i].amountOwed == 0 ||
+          this.groupUsers[i].amountOwed == null
+        ) {
+          state = false;
+        }
+      }
+      return state;
+    },
+    /**
+     * Checks to see if all users have valid percent owed attached to their account
+     */
+    validateUserPercentOwed: function () {
+      let state = true;
+      for (let i = 0; i < this.groupUsers.length; i++) {
+        if (
+          this.groupUsers[i].percentOwed == 0 ||
+          this.groupUsers[i].percentOwed == null
+        ) {
+          state = false;
+        }
+      }
+      return state;
+    },
+    /**
+     * Validation switch statement that is triggered on state changes in form
+     * @param {*} type Type of form to validate
+     */
+    validateMe: function (type) {
+      let state = false;
+      let trans = this.transactionDetails;
+      switch (type) {
+        case "totalAmount":
+          state =
+            trans.transactionAmount != 0 && trans.transactionAmount != null;
+          break;
+
+        case "userAmountOwed":
+          state = this.validateUserAmountOwed();
+          break;
+
+        case "userPercentOwed":
+          state = this.validateUserPercentOwed();
+          break;
+        case "transactionName":
+          state = trans.transactionName;
+          break;
+
+        default:
+          state =
+            trans.transactionAmount != 0 &&
+            trans.transactionAmount != null &&
+            this.userAmountOwed() &&
+            this.userPercentOwed() &&
+            trans.transactionName;
+      }
+      return state;
     },
   },
 };

@@ -106,24 +106,42 @@ export default {
     },
   },
   methods: {
+    /**
+     * Routes the user to the viewDebt dashboard
+     * Passes the groupID to the viewDebt dashboard
+     */
     viewDebt: function () {
       router.push({
         name: "viewDebt",
         params: { groupID: this.groupID },
       });
     },
+    /**
+     * Routes the user to the view transaction dashboard
+     * Passes this groupID and the transactionID to the view transaction dashboard
+     * @param {*} transactionID ID of transaction wished to be viewed
+     */
     viewTransactionDetails: function (transactionID) {
       router.push({
         name: "viewTransaction",
         params: { groupID: this.groupID, transactionID: transactionID },
       });
     },
+    /**
+     * routes user to create transaction dashboard
+     * passes the current groupID to the create dashboard
+     */
     addTransaction: function () {
       router.push({
         name: "createTransaction",
         params: { groupID: this.groupID },
       });
     },
+    /**
+     * Call to server to get transactions for this group
+     * Then for each transaction gets each user who is attached to the transaction
+     * Adds their name, and purchase date to each transaction
+     */
     getTransactions: async function () {
       let url = `/api/groupTransaction/${this.groupID}`;
       let response = await axios.get(url);
@@ -142,6 +160,11 @@ export default {
       }
       this.transactionList.reverse();
     },
+    /**
+     *
+     * Converts string date to proper format (M/D/Y)
+     * @param {*} tempDate string date
+     */
     formatDate: function (tempDate) {
       let date = new Date(tempDate);
       var month = date.getUTCMonth() + 1; //months from 1-12
@@ -151,6 +174,10 @@ export default {
       let newdate = month + "/" + day + "/" + year;
       return newdate;
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;
       this.groupInfo = await axios.get(url);

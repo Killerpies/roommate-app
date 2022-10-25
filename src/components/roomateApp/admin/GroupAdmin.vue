@@ -88,6 +88,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * Takes userID of person who is meant to be invited
+     * Finds their info in database
+     * Then adds them to current group in groupUsers table
+     */
     inviteMember: async function () {
       let url = `/api/userinfo/${this.inviteUserID}`;
       let response = await axios.get(url);
@@ -108,6 +113,11 @@ export default {
       }
       this.inviteUserID = "";
     },
+    /**
+     * This function takes a users info given from their account and adds it to the database
+     * If the user already exists then it will just pull the old info
+     * If the user does not exist then it adds them to the database
+     */
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
       let payload = {
@@ -125,6 +135,10 @@ export default {
       let response = await axios.get(url);
       this.currentUserInfo = response.data[0];
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       // gets groupID, groupname, groupowner
       let url = `/api/groups/${this.groupID}`;

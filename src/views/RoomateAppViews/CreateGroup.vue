@@ -52,6 +52,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * Takes the current users ID, Name, and the groupName they chose
+     * Adds those to the database
+     * Also adds the user to the group
+     */
     createGroup: async function () {
       //(groupName, groupOwnerUserID, groupOwnerUserFirstName, groupOwnerUserLastName)
       let url = `/api/groups/create`;

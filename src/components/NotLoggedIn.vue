@@ -36,6 +36,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * Routes user to the main page
+     */
     redirectToApp: function () {
       this.$router.push({
         name: "roommateapp",

@@ -90,9 +90,17 @@ export default {
     },
   },
   methods: {
+    /**
+     * Routes user back to last viewed component
+     * Should be financial
+     */
     backtoFinancial: function () {
       router.back();
     },
+    /**
+     * Searches for this users debt using transactionID
+     * Then pulls all user info for each row of debt and assigns their info to each debt transaction
+     */
     getDebtAmounts: async function () {
       let url = `/api/userDebt/${this.transactionID}`;
       let response = await axios.get(url);
@@ -105,6 +113,11 @@ export default {
         this.memberDebt[i].lastName = memberInfo.lastname;
       }
     },
+    /**
+     * Call to server to get transactions for this group
+     * Then for each transaction gets each user who is attached to the transaction
+     * Adds their name, and purchase date to each transaction
+     */
     getTransaction: async function () {
       let url = `/api/transaction/${this.transactionID}`;
       let response = await axios.get(url);
@@ -118,6 +131,10 @@ export default {
       tempTrans.lastName = result.data[0].lastname;
       this.transactionDetails = tempTrans;
     },
+    /**
+     * Makes call to server getting group name from server
+     * Then makes another call to server getting all users attached to the group
+     */
     getGroupInfo: async function () {
       let url = `/api/groups/${this.groupID}`;
       this.groupInfo = await axios.get(url);
@@ -131,6 +148,11 @@ export default {
         this.groupUsers.push(temp);
       }
     },
+    /**
+     *
+     * Converts string date to proper format (M/D/Y)
+     * @param {*} tempDate string date
+     */
     formatDate: function (tempDate) {
       let date = new Date(tempDate);
       var month = date.getUTCMonth() + 1; //months from 1-12

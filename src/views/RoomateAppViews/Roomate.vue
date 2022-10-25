@@ -115,6 +115,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * This function takes a users info given from their account and adds it to the database
+     * If the user already exists then it will just pull the old info
+     * If the user does not exist then it adds them to the database
+     */
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
       if (this.isAuthenticated) {
@@ -132,27 +137,26 @@ export default {
         this.currentUserInfo = response.data[0];
       }
     },
+    /**
+     * Gets the selected groupID from the dropdown
+     * Routes the user to groupDashboard
+     * Passes the groupID along with them
+     */
     goToGroup: function () {
       var x = document.getElementById("selectedGroup").value;
       router.push({ name: "groupDashboard", params: { groupID: x } });
     },
+    /**
+     * routes the user to the createGroupDashboard
+     */
     createGroup: function () {
       router.push({ name: "createGroup" });
     },
-    copyId: function () {
-      // Get the text field
-      var copyText = document.getElementById("copyUserID");
-
-      // Select the text field
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); // For mobile devices
-
-      // Copy the text inside the text field
-      navigator.clipboard.writeText(copyText.value);
-
-      // Alert the copied text
-      alert("Copied the text: " + copyText.value);
-    },
+    /**
+     * Takes the current userID
+     * Finds groups associated with that ID
+     * For each group Then get the groupNames associated with them and add to list of objects
+     */
     getRelatedGroups: async function () {
       try {
         let url = `/api/usergroups/${this.getUserID}`;
