@@ -6,7 +6,7 @@
     <h1 style="text-align: center">Create a Transaction</h1>
     <form v-on:submit.prevent="createTransaction">
       <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Transaction Name</span>
+        <span class="input-group-text" id="basic-addon1">Name</span>
         <input
           v-model="transactionDetails.transactionName"
           type="text"
@@ -19,7 +19,7 @@
         />
       </div>
       <div class="input-group mb-3">
-        <span class="input-group-text">Transaction Description</span>
+        <span class="input-group-text">Description</span>
         <textarea
           v-model="transactionDetails.transactionDescription"
           class="form-control"
@@ -28,7 +28,7 @@
         ></textarea>
       </div>
       <div class="input-group mb-3">
-        <span class="input-group-text">Total Amount $</span>
+        <span class="input-group-text">Price $</span>
         <input
           v-model="transactionDetails.transactionAmount"
           type="number"
@@ -36,9 +36,9 @@
           aria-label="Amount (to the nearest dollar)"
           placeholder="Enter Transaction Amount"
           :state="validateMe('totalAmount')"
+          @input="adjustInitialValues"
           required
         />
-        <span class="input-group-text">.00</span>
       </div>
       <div
         v-for="(item, index) in groupUsers"
@@ -52,21 +52,22 @@
           type="number"
           class="form-control"
           aria-label="Amount (to the nearest dollar)"
-          placeholder="Enter Percentage Owed %"
+          placeholder="Percentage %"
           v-model="groupUsers[index].percentOwed"
           :state="validateMe('userPercentOwed')"
+          @input="adjustOnPercentageChange(index)"
           required
         />
         <input
           type="number"
           class="form-control"
           aria-label="Amount (to the nearest dollar)"
-          placeholder="Enter Amount $"
+          placeholder="Amount $"
           v-model="groupUsers[index].amountOwed"
           :state="validateMe('userAmountOwed')"
+          @input="adjustOnAmountChange(index)"
           required
         />
-        <span class="input-group-text">.00</span>
       </div>
       <button class="btn btn-warning">Create Transaction</button>
     </form>
@@ -128,6 +129,43 @@ export default {
     },
   },
   methods: {
+    /**
+     * After user types in total amount
+     * automagically calculates percentage and total for all users
+     */
+    adjustInitialValues: function () {
+      let numberOfUsers = this.groupUsers.length;
+      let amountSplit =
+        this.transactionDetails.transactionAmount / numberOfUsers;
+      let percentageSplit =
+        (amountSplit / this.transactionDetails.transactionAmount) * 100;
+
+      for (let i = 0; i < numberOfUsers; i++) {
+        this.groupUsers[i].amountOwed = amountSplit;
+        this.groupUsers[i].percentOwed = percentageSplit;
+      }
+    },
+    /**
+     * After user types in amount on specific person,
+     * auto magically calculates the percentage that user owes
+     * @param {*} index location of user in array
+     */
+    adjustOnAmountChange: function (index) {
+      let amount = this.groupUsers[index].amountOwed;
+      let percentage =
+        (amount / this.transactionDetails.transactionAmount) * 10;
+      this.groupUsers[index].percentOwed = percentage;
+    },
+    /**
+     * After user types in percentage on specific person,
+     * auto magically calculates the amount that user owes
+     * @param {*} index location of user in array
+     */
+    adjustOnPercentageChange: function (index) {
+      let percent = this.groupUsers[index].percentOwed * 0.01;
+      let amount = this.transactionDetails.transactionAmount * percent;
+      this.groupUsers[index].amountOwed = amount;
+    },
     /**
      * Routes back to the last page visited
      * Should be financial
@@ -203,7 +241,9 @@ export default {
       for (let i = 0; i < this.groupUsers.length; i++) {
         if (
           this.groupUsers[i].amountOwed == 0 ||
-          this.groupUsers[i].amountOwed == null
+          this.groupUsers[i].amountOwed == null ||
+          this.groupUsers[i].amountOwed >
+            this.transactionDetails.transactionAmount
         ) {
           state = false;
         }
@@ -218,7 +258,8 @@ export default {
       for (let i = 0; i < this.groupUsers.length; i++) {
         if (
           this.groupUsers[i].percentOwed == 0 ||
-          this.groupUsers[i].percentOwed == null
+          this.groupUsers[i].percentOwed == null ||
+          this.groupUsers[i].percentOwed > 100
         ) {
           state = false;
         }
@@ -263,26 +304,31 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .createTransaction {
   text-align: right;
   margin: auto;
-  width: 70%;
+  width: 60%;
   /* border: 3px solid green; */
   padding: 10px;
 }
-.goBack {
-  text-align: left;
-  margin: auto;
-  width: 70%;
-  /* border: 3px solid green; */
-  padding: 10px;
-}
-.formArea {
-  text-align: right;
-  margin: auto;
-  width: 70%;
-  /* border: 3px solid green; */
-  padding: 10px;
+
+@media only screen and (max-width: 768px) {
+  .createTransaction {
+    text-align: right;
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+  }
+  /* For mobile phones: */
+  label,
+  span {
+    width: 60px;
+    /* overflow: hidden; */
+    display: inline-block;
+    inline-size: min-content;
+    /* text-overflow: ellipsis; */
+    /* white-space: nowrap; */
+  }
 }
 </style>
