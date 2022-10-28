@@ -32,6 +32,15 @@
               <a class="nav-link" style="cursor: pointer">Calendar</a>
             </li>
             <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                style="cursor: pointer"
+                @click="changeTab('grocerylist')"
+                >Grocery List</a
+              >
+            </li>
+            <li class="nav-item">
               <a class="nav-link" style="cursor: pointer" href="#">Chores</a>
             </li>
             <li class="nav-item">
@@ -56,6 +65,11 @@
       :groupID="groupID"
       :groupMembers="groupUsers"
     ></financialDashboard>
+    <groceryList
+      v-if="currentTab == 'grocerylist'"
+      :groupID="groupID"
+      :groupMembers="groupUsers"
+    ></groceryList>
   </div>
 </template>
 
@@ -65,6 +79,7 @@ import { useAuth0 } from "@auth0/auth0-vue";
 import router from "@/router";
 import financialDashboard from "@/components/roomateApp/financial/FinancialDashboard.vue";
 import adminDashboard from "@/components/roomateApp/admin/GroupAdmin.vue";
+import groceryList from "@/components/roomateApp/grocery/GroceryList.vue";
 
 export default {
   name: "groupDashboard",
@@ -75,6 +90,7 @@ export default {
   components: {
     financialDashboard,
     adminDashboard,
+    groceryList,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
