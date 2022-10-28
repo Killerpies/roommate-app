@@ -229,6 +229,8 @@ export default {
       let response = await axios.get(url);
       for (let i = 0; i < response.data.length; i++) {
         let temp = response.data[i];
+        temp.percentOwed = null;
+        temp.amountOwed = null;
         this.groupUsers.push(temp);
       }
       //   this.groupUsers = response.data;
@@ -240,6 +242,7 @@ export default {
       let state = true;
       for (let i = 0; i < this.groupUsers.length; i++) {
         if (
+          this.groupUsers[i].amountOwed ||
           this.groupUsers[i].amountOwed == 0 ||
           this.groupUsers[i].amountOwed == null ||
           this.groupUsers[i].amountOwed >
@@ -257,6 +260,7 @@ export default {
       let state = true;
       for (let i = 0; i < this.groupUsers.length; i++) {
         if (
+          this.groupUsers[i].percentOwed ||
           this.groupUsers[i].percentOwed == 0 ||
           this.groupUsers[i].percentOwed == null ||
           this.groupUsers[i].percentOwed > 100
