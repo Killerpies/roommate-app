@@ -39,6 +39,7 @@ app.use("/api/userInfo", userInfo)
 // GROCERY LIST ROUTES
 const groupGroceryList = require("./apiRoutes/roommateApp/grocerylist/groupGroceryList.js")
 app.use("/api/grocerylist", groupGroceryList)
+// comment
 
 //here we are configuring dist to serve app files
 if (process.env.NODE_ENV === "production"){
