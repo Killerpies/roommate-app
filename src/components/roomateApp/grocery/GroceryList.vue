@@ -174,7 +174,6 @@ export default {
     },
     archiveItem: async function (index) {
       let archivedItem = this.currentListContents.splice(index, 1)[0];
-      // console.log(archivedItem);
       this.currentArchivedItems.push(archivedItem);
       await this.updateList();
     },
@@ -203,7 +202,6 @@ export default {
         listContents: currentlist,
         archived: archivedList,
       };
-      // console.log(payload);
       await axios.post(url, payload);
     },
     getGroceryLists: async function () {

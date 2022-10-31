@@ -41,7 +41,12 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="cursor: pointer" href="#">Chores</a>
+              <a
+                class="nav-link"
+                style="cursor: pointer"
+                @click="changeTab('chorelist')"
+                >Chores</a
+              >
             </li>
             <li class="nav-item">
               <a
@@ -55,6 +60,7 @@
         </div>
       </div>
     </nav>
+    <choreList v-if="currentTab == 'chorelist'" :groupID="groupID"></choreList>
     <adminDashboard
       v-if="currentTab == 'admin'"
       :groupID="groupID"
@@ -77,6 +83,7 @@ import router from "@/router";
 import financialDashboard from "@/components/roomateApp/financial/FinancialDashboard.vue";
 import adminDashboard from "@/components/roomateApp/admin/GroupAdmin.vue";
 import groceryList from "@/components/roomateApp/grocery/GroceryList.vue";
+import choreList from "@/components/roomateApp/chores/ChoreList.vue";
 
 export default {
   name: "groupDashboard",
@@ -88,6 +95,7 @@ export default {
     financialDashboard,
     adminDashboard,
     groceryList,
+    choreList,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();

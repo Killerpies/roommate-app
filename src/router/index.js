@@ -71,6 +71,20 @@ const routes = [
     props: true,
     component: () => import(/* webpackChunkName: "createGroceryList" */ '../components/roomateApp/grocery/CreateGroceryList.vue')
 
+  },
+  {
+    path: '/roommateapp/chorelist/:groupID',
+    name:'choreList',
+    props: true,
+    component: () => import(/* webpackChunkName: "chorelist" */ '../components/roomateApp/chores/ChoreList.vue')
+
+  },
+  {
+    path: '/roommateapp/createGroceryList/:groupID',
+    name:'createChoreList',
+    props: true,
+    component: () => import(/* webpackChunkName: "createChoreList" */ '../components/roomateApp/chores/CreateChoreList.vue')
+
   }
 ]
 

@@ -19,7 +19,6 @@ router.post("/:groceryListID", async (req, res) => {
     let listContents = req.body.listContents
     let archived = req.body.archived
     let command = `UPDATE groceryLists SET listContents = '${listContents}', archived = '${archived}' WHERE groceryLists.groceryListID = ${groceryListID}`
-    console.log(command)
     const allTodos = await pool.query(command);
 
     res.json(allTodos.rows);

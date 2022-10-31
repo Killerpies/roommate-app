@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS userGroups;
 DROP TABLE IF EXISTS groupTransactions;
 DROP TABLE IF EXISTS userInfo;
 DROP TABLE IF EXISTS groceryLists;
+DROP TABLE IF EXISTS choreLists;
 DROP TABLE IF EXISTS groups;
 
 CREATE TABLE groups 
@@ -60,6 +61,16 @@ CREATE TABLE userDebt
 CREATE TABLE groceryLists
 (
     groceryListID SERIAL PRIMARY KEY,
+    groupID INT REFERENCES groups(groupID),
+    listName varchar(255),
+    listContents jsonb,
+    archived jsonb,
+    activeList boolean
+);
+
+CREATE TABLE choreLists
+(
+    choreListID SERIAL PRIMARY KEY,
     groupID INT REFERENCES groups(groupID),
     listName varchar(255),
     listContents jsonb,
