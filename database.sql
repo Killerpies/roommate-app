@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS groupTransactions;
 DROP TABLE IF EXISTS userInfo;
 DROP TABLE IF EXISTS groceryLists;
 DROP TABLE IF EXISTS choreLists;
+DROP TABLE IF EXISTS calendarEvents;
 DROP TABLE IF EXISTS groups;
 
 CREATE TABLE groups 
@@ -76,6 +77,15 @@ CREATE TABLE choreLists
     listContents jsonb,
     archived jsonb,
     activeList boolean
+);
+
+CREATE TABLE calendarEvents
+(
+    eventID SERIAL PRIMARY KEY,
+    groupID INT REFERENCES groups(groupID),
+    title varchar(255),
+    eventDateStart DATE,
+    eventDateEnd DATE
 );
 
 INSERT INTO groceryLists (groupID, listName, listContents, activeList)

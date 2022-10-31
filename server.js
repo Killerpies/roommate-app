@@ -43,13 +43,14 @@ app.use("/api/grocerylist", groupGroceryList)
 const groceryListSpecific = require("./apiRoutes/roommateApp/grocerylist/specificGroceryList.js")
 app.use("/api/specificgrocerylist", groceryListSpecific)
 // CHORE LIST ROUTES
-const groupChoreList = require("./apiRoutes/roommateApp/chores/groupChoreList")
+const groupChoreList = require("./apiRoutes/roommateApp/chores/groupChoreList.js")
 app.use("/api/chorelist", groupChoreList)
 // SPECIFIC CHORE LIST MODIFICATIONS
-const choreListSpecific = require("./apiRoutes/roommateApp/chores/specificChoreList")
+const choreListSpecific = require("./apiRoutes/roommateApp/chores/specificChoreList.js")
 app.use("/api/specificchorelist", choreListSpecific)
-// comment
-// comment
+// CALENDAR EVENTS
+const calendarEvents = require("./apiRoutes/roommateApp/calendar/calendarEvents.js")
+app.use("/api/groupcalendar", calendarEvents)
 
 //here we are configuring dist to serve app files
 if (process.env.NODE_ENV === "production"){

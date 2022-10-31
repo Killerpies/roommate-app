@@ -43,22 +43,23 @@ export default {
       dataReady: false,
       groupInfo: null,
       groupUsers: [],
+      allEvents: [],
+      events: [],
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: "dayGridMonth",
         dateClick: this.handleDateClick,
-        events: [
-          { title: "event 1", date: "2022-04-01" },
-          { title: "event 2", date: "2022-10-31" },
-        ],
+        // eventMouseEnter: this.handlePopup,
+        events: [],
       },
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getGroupInfo();
+    await this.getGroupInfo();
+    await this.getEvents();
     this.dataReady = true;
   },
   computed: {
@@ -73,8 +74,33 @@ export default {
     },
   },
   methods: {
+    getEvents: async function () {
+      let url = `/api/groupcalendar/${this.groupID}`;
+      let response = await axios.get(url);
+      let allEvents = response.data;
+      for (let i = 0; i < allEvents.length; i++) {
+        let temp = {
+          title: allEvents[i].title,
+          start: allEvents[i].eventdatestart,
+          end: allEvents[i].eventdateend,
+        };
+        this.events.push(temp);
+      }
+      this.calendarOptions.events = this.events;
+    },
+    // handlePopup: function (info) {
+    //   console.log(info);
+    // },
     handleDateClick: function (arg) {
-      alert("date click! " + arg.dateStr);
+      // alert("date click! " + arg.dateStr);
+      router.push({
+        name: "createEvent",
+        params: {
+          groupID: this.groupID,
+          eventDateStart: arg.dateStr,
+          eventDateEnd: arg.dateStr,
+        },
+      });
     },
     /**
      * Routes back to the last page visited
@@ -95,6 +121,20 @@ export default {
 
       today = mm + "/" + dd + "/" + yyyy;
       return today;
+    },
+    /**
+     *
+     * Converts string date to proper format (M/D/Y)
+     * @param {*} tempDate string date
+     */
+    formatDate: function (tempDate) {
+      let date = new Date(tempDate);
+      var month = date.getUTCMonth() + 1; //months from 1-12
+      var day = date.getUTCDate();
+      var year = date.getUTCFullYear();
+
+      let newdate = month + "/" + day + "/" + year;
+      return newdate;
     },
     /**
      * Makes call to server getting group name from server
