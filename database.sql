@@ -63,11 +63,12 @@ CREATE TABLE groceryLists
     groupID INT REFERENCES groups(groupID),
     listName varchar(255),
     listContents jsonb,
+    archived jsonb,
     activeList boolean
 );
 
 INSERT INTO groceryLists (groupID, listName, listContents, activeList)
-    VALUES (1, 'templist', '[{"itemName": 1, "activeItem": false},{"itemName": "hello", "activeItem": false}]', False);
+    VALUES (1, 'templist', '[]', False);
 
 
 

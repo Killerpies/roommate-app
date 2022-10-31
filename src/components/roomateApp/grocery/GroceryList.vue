@@ -44,6 +44,7 @@
   <div class="mainPage" v-if="dataReady">
     <div v-if="dataReady">
       <hr />
+      <h2>Current List</h2>
       <table class="table table-hover table-striped">
         <thead>
           <tr>
@@ -59,7 +60,7 @@
               <a
                 class="nav-link"
                 style="cursor: pointer; text-decoration: underline"
-                @click="removeItem(index)"
+                @click="archiveItem(index)"
                 >Remove Item</a
               >
             </td>
@@ -70,6 +71,39 @@
                 v-bind:style="!item.activeItem ? 'color: red' : ''"
                 @click="moveItem(index)"
                 >Check Off Item</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <h2>Archived Items</h2>
+      <table class="table table-hover table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Remove Item</th>
+            <th scope="col">Check Off Item</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in currentArchivedItems" :key="index">
+            <td>{{ item.itemName }}</td>
+            <td>
+              <a
+                class="nav-link"
+                style="cursor: pointer; text-decoration: underline"
+                @click="removeItem(index)"
+                >Permanantly Remove Item</a
+              >
+            </td>
+            <td>
+              <a
+                class="nav-link"
+                style="cursor: pointer; text-decoration: underline"
+                v-bind:style="!item.activeItem ? 'color: red' : ''"
+                @click="reAddItem(index)"
+                >Re-add item</a
               >
             </td>
           </tr>
@@ -109,6 +143,7 @@ export default {
       groupUsers: [],
       currentGroceryList: [],
       currentListContents: [],
+      currentArchivedItems: [],
       allGroceryLists: [],
       newItem: "",
     };
@@ -133,11 +168,22 @@ export default {
     },
   },
   methods: {
-    removeItem: function (index) {
-      this.currentListContents.splice(index, 1);
-      this.updateList();
+    removeItem: async function (index) {
+      this.currentArchivedItems.splice(index, 1);
+      await this.updateList();
     },
-    addItem: function () {
+    archiveItem: async function (index) {
+      let archivedItem = this.currentListContents.splice(index, 1)[0];
+      // console.log(archivedItem);
+      this.currentArchivedItems.push(archivedItem);
+      await this.updateList();
+    },
+    reAddItem: async function (index) {
+      let item = this.currentArchivedItems.splice(index, 1)[0];
+      this.currentListContents.push(item);
+      await this.updateList();
+    },
+    addItem: async function () {
       if (this.newItem == "") {
         return;
       }
@@ -147,14 +193,17 @@ export default {
       };
       this.currentListContents.unshift(temp);
       this.newItem = "";
-      this.updateList();
+      await this.updateList();
     },
     updateList: async function () {
       let url = `/api/specificgrocerylist/${this.currentGroceryList.grocerylistid}`;
-      let list = JSON.stringify(this.currentListContents);
+      let currentlist = JSON.stringify(this.currentListContents);
+      let archivedList = JSON.stringify(this.currentArchivedItems);
       let payload = {
-        listContents: list,
+        listContents: currentlist,
+        archived: archivedList,
       };
+      // console.log(payload);
       await axios.post(url, payload);
     },
     getGroceryLists: async function () {
@@ -162,9 +211,16 @@ export default {
       let response = await axios.get(url);
       this.allGroceryLists = response.data;
       this.currentGroceryList = response.data[0];
-      this.currentListContents = this.currentGroceryList.listcontents;
+      this.currentListContents = [];
+      this.currentArchivedItems = [];
+      if (this.currentGroceryList.listcontents) {
+        this.currentListContents = this.currentGroceryList.listcontents;
+      }
+      if (this.currentGroceryList.archived) {
+        this.currentArchivedItems = this.currentGroceryList.archived;
+      }
     },
-    moveItem: function (index) {
+    moveItem: async function (index) {
       let temp = this.currentListContents.splice(index, 1)[0];
       temp.activeItem = !temp.activeItem;
       if (!temp.activeItem) {
@@ -173,7 +229,7 @@ export default {
       if (temp.activeItem) {
         this.currentListContents.unshift(temp);
       }
-      this.updateList();
+      await this.updateList();
     },
     createList: function () {
       router.push({
