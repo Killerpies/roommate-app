@@ -29,7 +29,13 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="cursor: pointer">Calendar</a>
+              <a
+                class="nav-link"
+                aria-current="page"
+                style="cursor: pointer"
+                @click="changeTab('calendar')"
+                >Calendar</a
+              >
             </li>
             <li class="nav-item">
               <a
@@ -60,6 +66,7 @@
         </div>
       </div>
     </nav>
+    <calendar v-if="currentTab == 'calendar'" :groupID="groupID"></calendar>
     <choreList v-if="currentTab == 'chorelist'" :groupID="groupID"></choreList>
     <adminDashboard
       v-if="currentTab == 'admin'"
@@ -84,6 +91,7 @@ import financialDashboard from "@/components/roomateApp/financial/FinancialDashb
 import adminDashboard from "@/components/roomateApp/admin/GroupAdmin.vue";
 import groceryList from "@/components/roomateApp/grocery/GroceryList.vue";
 import choreList from "@/components/roomateApp/chores/ChoreList.vue";
+import calendar from "@/components/roomateApp/calendar/GroupCalendar.vue";
 
 export default {
   name: "groupDashboard",
@@ -96,6 +104,7 @@ export default {
     adminDashboard,
     groceryList,
     choreList,
+    calendar,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
