@@ -7,6 +7,40 @@
   <div>
     <h1>Your Groups Groceries</h1>
   </div>
+  <div class="row" id="selectionArea">
+    <div class="col" v-if="dataReady">
+      <!-- <label>Choose another List</label> -->
+      <!-- <select
+        id="selectedGroup"
+        class="form-select"
+        aria-label="Default select example"
+      >
+        <option
+          v-for="(item, index) in groupInfo"
+          :key="index"
+          v-bind:value="item.groupid"
+        >
+          {{ item.groupname }}
+        </option>
+      </select> -->
+      <!-- <button class="btn btn-warning" @click="viewDebt">View My Debt</button> -->
+    </div>
+    <div class="col" v-if="allGroceryLists.length < 1">
+      <button class="btn btn-warning" @click="createList">
+        Create New List
+      </button>
+    </div>
+  </div>
+  <div class="input-group mb-3" v-if="dataReady">
+    <input
+      type="text"
+      v-model="newItem"
+      @keyup.enter="addItem"
+      placeholder="Add an Item"
+      class="form-control"
+    />
+    <button class="btn btn-warning" @click="addItem">Add Item</button>
+  </div>
   <div class="mainPage" v-if="dataReady">
     <div v-if="dataReady">
       <hr />
@@ -14,21 +48,28 @@
         <thead>
           <tr>
             <th scope="col">Item</th>
-            <th scope="col">Check</th>
+            <th scope="col">Remove Item</th>
+            <th scope="col">Check Off Item</th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, index) in currentGroceryList"
-            :key="index"
-            style="cursor: pointer"
-          >
-            <td>{{ item.name }}</td>
+          <tr v-for="(item, index) in currentListContents" :key="index">
+            <td>{{ item.itemName }}</td>
             <td>
               <a
                 class="nav-link"
                 style="cursor: pointer; text-decoration: underline"
-                >View Details</a
+                @click="removeItem(index)"
+                >Remove Item</a
+              >
+            </td>
+            <td>
+              <a
+                class="nav-link"
+                style="cursor: pointer; text-decoration: underline"
+                v-bind:style="!item.activeItem ? 'color: red' : ''"
+                @click="moveItem(index)"
+                >Check Off Item</a
               >
             </td>
           </tr>
@@ -67,6 +108,9 @@ export default {
       groupInfo: null,
       groupUsers: [],
       currentGroceryList: [],
+      currentListContents: [],
+      allGroceryLists: [],
+      newItem: "",
     };
   },
   async mounted() {
@@ -74,6 +118,7 @@ export default {
       router.push({ name: "home" });
     }
     await this.getGroupInfo();
+    await this.getGroceryLists();
     this.dataReady = true;
   },
   computed: {
@@ -88,6 +133,54 @@ export default {
     },
   },
   methods: {
+    removeItem: function (index) {
+      this.currentListContents.splice(index, 1);
+      this.updateList();
+    },
+    addItem: function () {
+      if (this.newItem == "") {
+        return;
+      }
+      let temp = {
+        itemName: this.newItem,
+        activeItem: true,
+      };
+      this.currentListContents.unshift(temp);
+      this.newItem = "";
+      this.updateList();
+    },
+    updateList: async function () {
+      let url = `/api/specificgrocerylist/${this.currentGroceryList.grocerylistid}`;
+      let list = JSON.stringify(this.currentListContents);
+      let payload = {
+        listContents: list,
+      };
+      await axios.post(url, payload);
+    },
+    getGroceryLists: async function () {
+      let url = `/api/grocerylist/${this.groupID}`;
+      let response = await axios.get(url);
+      this.allGroceryLists = response.data;
+      this.currentGroceryList = response.data[0];
+      this.currentListContents = this.currentGroceryList.listcontents;
+    },
+    moveItem: function (index) {
+      let temp = this.currentListContents.splice(index, 1)[0];
+      temp.activeItem = !temp.activeItem;
+      if (!temp.activeItem) {
+        this.currentListContents.push(temp);
+      }
+      if (temp.activeItem) {
+        this.currentListContents.unshift(temp);
+      }
+      this.updateList();
+    },
+    createList: function () {
+      router.push({
+        name: "createGroceryList",
+        params: { groupID: this.groupID },
+      });
+    },
     /**
      * Routes user back to last viewed component
      */
@@ -139,5 +232,9 @@ export default {
   margin: 10px;
   text-align: right;
   padding-right: 10px;
+}
+#selectionArea {
+  margin: auto;
+  text-align: center;
 }
 </style>

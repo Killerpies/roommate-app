@@ -64,6 +64,13 @@ const routes = [
     props: true,
     component: () => import(/* webpackChunkName: "groceryList" */ '../components/roomateApp/grocery/GroceryList.vue')
 
+  },
+  {
+    path: '/roommateapp/createGroceryList/:groupID',
+    name:'createGroceryList',
+    props: true,
+    component: () => import(/* webpackChunkName: "createGroceryList" */ '../components/roomateApp/grocery/CreateGroceryList.vue')
+
   }
 ]
 

@@ -62,7 +62,7 @@ CREATE TABLE groceryLists
     groceryListID SERIAL PRIMARY KEY,
     groupID INT REFERENCES groups(groupID),
     listName varchar(255),
-    listContents json,
+    listContents jsonb,
     activeList boolean
 );
 

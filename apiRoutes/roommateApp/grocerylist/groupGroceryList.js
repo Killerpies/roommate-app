@@ -14,6 +14,7 @@ router.post("/create", async(req,res)=>{
     let listName = req.body.listName
     let listContents = req.body.listContents
     let activeList = req.body.activeList
+    console.log(listContents)
     const newGroup = await pool.query(`INSERT INTO groceryLists(groupID, listName, listContents, activeList) VALUES ('${groupID}', '${listName}', '${listContents}', '${activeList}') RETURNING groceryListID`)
     res.json(newGroup)
   }catch (error) {

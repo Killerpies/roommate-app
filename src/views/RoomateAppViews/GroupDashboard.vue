@@ -58,17 +58,14 @@
     <adminDashboard
       v-if="currentTab == 'admin'"
       :groupID="groupID"
-      :groupMembers="groupUsers"
     ></adminDashboard>
     <financialDashboard
       v-if="currentTab == 'financial'"
       :groupID="groupID"
-      :groupMembers="groupUsers"
     ></financialDashboard>
     <groceryList
       v-if="currentTab == 'grocerylist'"
       :groupID="groupID"
-      :groupMembers="groupUsers"
     ></groceryList>
   </div>
 </template>
