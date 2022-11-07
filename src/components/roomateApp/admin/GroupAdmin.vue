@@ -1,11 +1,14 @@
 <template>
   <div v-if="dataReady">
-    <h1>Group Admin</h1>
+    <h1>Group Settings</h1>
     <hr />
     <div>
       <section>
-        <h2>Group Settings</h2>
         <h4>Change Group Name</h4>
+        <input type="text" placeholder="Enter New Name" v-model="groupName" />
+        <button class="btn btn-warning" @click="changeGroupName">
+          Change Group Name
+        </button>
         <p>Group Name: {{ groupInfo.groupname }}</p>
         <h4>Add/Invite Group Members</h4>
         <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
@@ -14,15 +17,25 @@
         </button>
         <hr />
       </section>
+      <section v-if="isOwner">
+        <h2>Owner Settings</h2>
+        <div v-for="(item, index) in groupUsers" :key="index" class="row mt-2">
+          <div v-if="item.userid != groupInfo.groupowneruserid" class="col">
+            <button class="btn btn-danger" @click="removeUserFromGroup(index)">
+              Remove from group
+            </button>
+            {{ item.firstName }} {{ item.lastName }}
+          </div>
+        </div>
+      </section>
       <section>
-        <h2>User Settings</h2>
-        <p>
-          First Name: {{ getFirstName }} <br />
-          Last Name: {{ getLastName }} <br />
-          Phone Number: <br />
-          Email: <br />
+        <h2>My Groups Contact Info</h2>
+        <p v-for="(item, index) in groupContactInfo" :key="index">
+          First Name: {{ item.firstname }} <br />
+          Last Name: {{ item.lastname }} <br />
+          Phone Number: {{ item.phonenumber }}<br />
+          Email: {{ item.email }}<br />
         </p>
-        <hr />
       </section>
     </div>
   </div>
@@ -63,6 +76,8 @@ export default {
       groupInfo: null,
       groupUsers: [],
       currentUserInfo: null,
+      groupContactInfo: [],
+      groupName: "",
     };
   },
   async mounted() {
@@ -71,6 +86,7 @@ export default {
     }
     await this.getCurrentUserInfo();
     await this.getGroupInfo();
+    await this.getGroupContactInfo();
     this.dataReady = true;
   },
   computed: {
@@ -86,8 +102,28 @@ export default {
     getGroupName() {
       return this.groupInfo.groupname;
     },
+    isOwner() {
+      return this.groupInfo.groupowneruserid == this.getUserID;
+    },
   },
   methods: {
+    changeGroupName: async function () {
+      let payload = {
+        groupName: this.groupName,
+        groupID: this.groupID,
+      };
+
+      let url = `/api/alterGroup/changeGroupName`;
+      await axios.post(url, payload);
+      await this.getGroupInfo();
+    },
+    removeUserFromGroup: async function (index) {
+      let temp = this.groupUsers.splice(index, 1)[0];
+      let payload = temp;
+      payload.groupID = this.groupID;
+      let url = `/api/userGroupMembers/removeMember`;
+      await axios.post(url, payload);
+    },
     /**
      * Takes userID of person who is meant to be invited
      * Finds their info in database
@@ -134,6 +170,15 @@ export default {
       url = `/api/userInfo/${this.getUserID}`;
       let response = await axios.get(url);
       this.currentUserInfo = response.data[0];
+    },
+    getGroupContactInfo: async function () {
+      for (let i = 0; i < this.groupUsers.length; i++) {
+        let url = `/api/userInfo/${this.groupUsers[i].userid}`;
+        let response = await axios.get(url);
+        // console.log(response.data);
+        let temp = response.data[0];
+        this.groupContactInfo.push(temp);
+      }
     },
     /**
      * Makes call to server getting group name from server

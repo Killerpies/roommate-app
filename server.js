@@ -27,6 +27,9 @@ app.use("/api/specificUserDebt" ,userdebtspecific)
 // Group Routes
 const roommateGroups = require("./apiRoutes/roommateApp/groups/roommateGroups.js")
 app.use("/api/groups" ,roommateGroups)
+// ALTER GROUP ROUTES
+const roommateGroupAlter = require("./apiRoutes/roommateApp/groups/alterGroup.js")
+app.use("/api/alterGroup" ,roommateGroupAlter)
 // USER Group Routes
 const roommateUserGroups = require("./apiRoutes/roommateApp/groups/roommateUserGroups.js")
 app.use("/api/userGroups" ,roommateUserGroups)

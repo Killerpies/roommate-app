@@ -98,6 +98,10 @@ export default {
   props: {
     groupID: String,
     // likes: Number
+    mode: {
+      type: String,
+      default: "financial",
+    },
   },
   components: {
     financialDashboard,
@@ -122,7 +126,7 @@ export default {
   data() {
     return {
       dataReady: false,
-      currentTab: "financial",
+      currentTab: "",
       groupInfo: null,
       groupUsers: [],
       currentUserInfo: null,
@@ -134,6 +138,7 @@ export default {
     }
     await this.getGroupInfo();
     await this.getCurrentUserInfo();
+    this.currentTab = this.mode;
     this.dataReady = true;
   },
   computed: {
