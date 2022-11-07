@@ -54,6 +54,9 @@ app.use("/api/specificchorelist", choreListSpecific)
 // CALENDAR EVENTS
 const calendarEvents = require("./apiRoutes/roommateApp/calendar/calendarEvents.js")
 app.use("/api/groupcalendar", calendarEvents)
+// SEND EMAIL
+const sendEmail = require("./apiRoutes/roommateApp/sendemail/sendEmail.js")
+app.use("/api/send-email", sendEmail)
 
 //here we are configuring dist to serve app files
 if (process.env.NODE_ENV === "production"){

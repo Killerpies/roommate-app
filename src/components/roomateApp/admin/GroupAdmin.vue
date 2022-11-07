@@ -16,6 +16,7 @@
           Invite Member
         </button>
         <hr />
+        <button class="btn btn-danger" @click="sendEmail()">Send Email</button>
       </section>
       <section v-if="isOwner">
         <h2>Owner Settings</h2>
@@ -107,6 +108,10 @@ export default {
     },
   },
   methods: {
+    sendEmail: async function () {
+      let url = `/api/send-email`;
+      await axios.post(url);
+    },
     changeGroupName: async function () {
       let payload = {
         groupName: this.groupName,
