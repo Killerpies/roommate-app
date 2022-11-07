@@ -11,7 +11,10 @@ const router = express.Router()
 // app.use(bodyParser.json());
 
 router.post('/', function (req, res) {
-    console.log('here')
+    let recipient = req.body.recipient
+    let subject = req.body.subject
+    let body = req.body.body
+
   let transporter = nodeMailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -24,9 +27,9 @@ router.post('/', function (req, res) {
   });
   let mailOptions = {
       // should be replaced with real recipient's account
-      to: 'accelkidjustin@gmail.com',
-      subject: 'testing',
-      text: 'testing'
+      to: `${recipient}`,
+      subject: `${subject}`,
+      text: `${body}`
   };
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {

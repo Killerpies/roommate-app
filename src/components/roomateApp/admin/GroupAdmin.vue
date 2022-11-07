@@ -11,12 +11,23 @@
         </button>
         <p>Group Name: {{ groupInfo.groupname }}</p>
         <h4>Add/Invite Group Members</h4>
-        <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
-        <button class="btn btn-warning" @click="inviteMember">
-          Invite Member
-        </button>
+        <div>
+          <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
+          <button class="btn btn-warning" @click="inviteMemberNoEmail">
+            Invite Member With ID
+          </button>
+        </div>
+        <div class="mt-2">
+          <input
+            type="text"
+            placeholder="Enter User Email"
+            v-model="inviteUserEmail"
+          />
+          <button class="btn btn-danger" @click="inviteMemberWithEmail()">
+            Send Email Invite
+          </button>
+        </div>
         <hr />
-        <button class="btn btn-danger" @click="sendEmail()">Send Email</button>
       </section>
       <section v-if="isOwner">
         <h2>Owner Settings</h2>
@@ -79,6 +90,7 @@ export default {
       currentUserInfo: null,
       groupContactInfo: [],
       groupName: "",
+      inviteUserEmail: "",
     };
   },
   async mounted() {
@@ -108,10 +120,6 @@ export default {
     },
   },
   methods: {
-    sendEmail: async function () {
-      let url = `/api/send-email`;
-      await axios.post(url);
-    },
     changeGroupName: async function () {
       let payload = {
         groupName: this.groupName,
@@ -129,12 +137,26 @@ export default {
       let url = `/api/userGroupMembers/removeMember`;
       await axios.post(url, payload);
     },
+    inviteMemberWithEmail: async function () {
+      let url = `/api/send-email`;
+      let subject = "Roommate-app: New Group invite";
+      let body = `${this.getFirstName} ${this.getLastName} invited you too: ${this.getGroupName}\n`;
+      body += `Click the link below to join:`;
+      let recipient = this.inviteUserEmail;
+      let payload = {
+        recipient: recipient,
+        subject: subject,
+        body: body,
+      };
+      await axios.post(url, payload);
+      this.inviteUserEmail = "";
+    },
     /**
      * Takes userID of person who is meant to be invited
      * Finds their info in database
      * Then adds them to current group in groupUsers table
      */
-    inviteMember: async function () {
+    inviteMemberNoEmail: async function () {
       let url = `/api/userinfo/${this.inviteUserID}`;
       let response = await axios.get(url);
       if (response.data.length > 0) {
