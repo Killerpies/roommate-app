@@ -11,6 +11,7 @@ const router = express.Router()
 // app.use(bodyParser.json());
 
 router.post('/', function (req, res) {
+    console.log(req.body)
     let recipient = req.body.recipient
     let subject = req.body.subject
     let body = req.body.body
@@ -27,9 +28,9 @@ router.post('/', function (req, res) {
   });
   let mailOptions = {
       // should be replaced with real recipient's account
-      to: `${recipient}`,
-      subject: `${subject}`,
-      text: `${body}`
+      to: recipient,
+      subject: subject,
+      text: body
   };
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
