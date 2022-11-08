@@ -39,6 +39,7 @@
             {{ item.firstName }} {{ item.lastName }}
           </div>
         </div>
+        <hr />
       </section>
       <section>
         <h2>My Groups Contact Info</h2>

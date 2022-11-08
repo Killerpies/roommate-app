@@ -56,6 +56,14 @@ import router from "@/router";
 export default {
   name: "createEvent",
   props: {
+    mode: {
+      type: String,
+      default: "create",
+    },
+    eventID: {
+      type: String,
+      default: null,
+    },
     groupID: String,
     eventDateStart: String,
     eventDateEnd: String,
@@ -85,6 +93,7 @@ export default {
       dataReady: false,
     };
   },
+  // {{ this.eventID }}
   mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });

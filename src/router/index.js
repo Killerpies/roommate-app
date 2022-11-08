@@ -94,7 +94,7 @@ const routes = [
 
   },
   {
-    path: '/roommateapp/createEvent/:groupID/:eventDateStart/:eventDateEnd',
+    path: '/roommateapp/createEvent/:mode/:eventID?/:groupID/:eventDateStart/:eventDateEnd',
     name:'createEvent',
     props: true,
     component: () => import(/* webpackChunkName: "createEvent" */ '../components/roomateApp/calendar/CreateEvent.vue')

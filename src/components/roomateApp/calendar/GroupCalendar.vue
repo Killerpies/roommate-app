@@ -96,6 +96,7 @@ export default {
       router.push({
         name: "createEvent",
         params: {
+          mode: "create",
           groupID: this.groupID,
           eventDateStart: arg.dateStr,
           eventDateEnd: arg.dateStr,
