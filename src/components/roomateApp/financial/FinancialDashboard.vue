@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Your Groups Transactions</h1>
+    <h1>{{ $store.getters.firstname }}</h1>
   </div>
   <div class="row">
     <div class="col">

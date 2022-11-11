@@ -92,7 +92,7 @@ import adminDashboard from "@/components/roomateApp/admin/GroupAdmin.vue";
 import groceryList from "@/components/roomateApp/grocery/GroceryList.vue";
 import choreList from "@/components/roomateApp/chores/ChoreList.vue";
 import calendar from "@/components/roomateApp/calendar/GroupCalendar.vue";
-
+// import user from "@/store/modules/user.js";
 export default {
   name: "groupDashboard",
   props: {
@@ -136,7 +136,9 @@ export default {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    await this.getGroupInfo();
+    // await this.getGroupInfo();
+    this.groupInfo = await this.$store.dispatch("getGroupInfo", this.groupID);
+    this.groupUsers = await this.$store.dispatch("getGroupUsers", this.groupID);
     await this.getCurrentUserInfo();
     this.currentTab = this.mode;
     this.dataReady = true;
@@ -169,13 +171,11 @@ export default {
           firstName: this.getFirstName,
           lastName: this.getLastName,
         };
-        let url = `/api/userinfo/create`;
-        await axios.post(url, payload);
-
-        // get user entry from database (Either the brand new one or one thats already created)
-        url = `/api/userInfo/${this.getUserID}`;
-        let response = await axios.get(url);
-        this.currentUserInfo = response.data[0];
+        await this.$store.dispatch("createUser", payload);
+        this.currentUserInfo = await this.$store.dispatch(
+          "getCurrentUserInfo",
+          this.getUserID
+        );
       }
     },
     /**
