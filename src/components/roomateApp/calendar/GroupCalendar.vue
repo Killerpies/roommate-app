@@ -49,6 +49,7 @@ export default {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: "dayGridMonth",
         dateClick: this.handleDateClick,
+        eventClick: this.handleEventClick,
         // eventMouseEnter: this.handlePopup,
         events: [],
       },
@@ -75,19 +76,44 @@ export default {
   },
   methods: {
     getEvents: async function () {
-      let url = `/api/groupcalendar/${this.groupID}`;
+      let url = `/api/groupcalendar/eventsforGroup/${this.groupID}`;
+      // let payload = {
+      //   groupID: this.groupID,
+      //   test: "dsfsfdsf",
+      // };
+      // console.log(payload);
       let response = await axios.get(url);
       let allEvents = response.data;
+      console.log(allEvents);
       for (let i = 0; i < allEvents.length; i++) {
         let temp = {
+          id: allEvents[i].eventid,
           title: allEvents[i].title,
           start: allEvents[i].eventdatestart,
           end: allEvents[i].eventdateend,
+          allDay: true,
         };
         this.events.push(temp);
       }
       this.calendarOptions.events = this.events;
     },
+    handleEventClick: function (arg) {
+      // console.log(arg.event);
+      router.push({
+        name: "createEvent",
+        params: {
+          mode: "edit",
+          eventID: arg.event.id,
+          groupID: this.groupID,
+          eventDateStart: this.formatDate(arg.event.startStr),
+          eventDateEnd:
+            arg.event.endStr != ""
+              ? this.formatDate(arg.event.endStr)
+              : this.formatDate(arg.event.startStr),
+        },
+      });
+    },
+
     // handlePopup: function (info) {
     //   console.log(info);
     // },
@@ -126,16 +152,18 @@ export default {
     /**
      *
      * Converts string date to proper format (M/D/Y)
-     * @param {*} tempDate string date
+     * @param {*} date string date
      */
-    formatDate: function (tempDate) {
-      let date = new Date(tempDate);
-      var month = date.getUTCMonth() + 1; //months from 1-12
-      var day = date.getUTCDate();
-      var year = date.getUTCFullYear();
+    formatDate: function (date) {
+      var d = new Date(date),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
 
-      let newdate = month + "/" + day + "/" + year;
-      return newdate;
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+
+      return [year, month, day].join("-");
     },
     /**
      * Makes call to server getting group name from server

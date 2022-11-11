@@ -85,7 +85,8 @@ CREATE TABLE calendarEvents
     groupID INT REFERENCES groups(groupID),
     title varchar(255),
     eventDateStart DATE,
-    eventDateEnd DATE
+    eventDateEnd DATE,
+    eventDescription text
 );
 
 INSERT INTO groceryLists (groupID, listName, listContents, activeList)

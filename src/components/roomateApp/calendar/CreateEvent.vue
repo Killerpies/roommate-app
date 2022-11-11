@@ -1,8 +1,9 @@
 <template>
   <div v-if="groupUsers.length > 0" class="createTransaction">
     <button class="btn btn-warning" @click="back">Back</button>
-    <h1 style="text-align: center">Create Event</h1>
-    <form v-on:submit.prevent="createEvent">
+    <h1 v-if="mode == 'create'" style="text-align: center">Create Event</h1>
+    <h1 v-else style="text-align: center">Edit Event</h1>
+    <form v-on:submit.prevent="createOrEditEvent">
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1">Title</span>
         <input
@@ -42,9 +43,20 @@
           required
         />
       </div>
-      <button type="submit" class="btn btn-warning">Create Event</button>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Description</span>
+        <textarea
+          v-model="eventDetails.eventDescription"
+          class="form-control"
+          aria-label="With textarea"
+          placeholder="Enter a description"
+        ></textarea>
+      </div>
+      <button v-if="mode == 'create'" type="submit" class="btn btn-warning">
+        Create Event
+      </button>
+      <button v-else type="submit" class="btn btn-warning">Update Event</button>
     </form>
-    <p>{{ eventDetails }}</p>
   </div>
 </template>
 
@@ -56,6 +68,7 @@ import router from "@/router";
 export default {
   name: "createEvent",
   props: {
+    title: String,
     mode: {
       type: String,
       default: "create",
@@ -87,6 +100,7 @@ export default {
         title: "",
         eventDateStart: "",
         eventDateEnd: "",
+        eventDescription: "",
       },
       groupInfo: null,
       groupUsers: [],
@@ -94,13 +108,17 @@ export default {
     };
   },
   // {{ this.eventID }}
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
     this.getGroupInfo();
-    this.eventDetails.eventDateStart = this.eventDateStart;
-    this.eventDetails.eventDateEnd = this.eventDateEnd;
+    if (this.eventID && this.mode == "edit") {
+      await this.getEvent();
+    } else {
+      this.eventDetails.eventDateStart = this.eventDateStart;
+      this.eventDetails.eventDateEnd = this.eventDateEnd;
+    }
     this.dataReady = true;
   },
   computed: {
@@ -115,13 +133,38 @@ export default {
     },
   },
   methods: {
+    getEvent: async function () {
+      let url = `/api/groupCalendar/singleEvent/${this.eventID}`;
+      let response = await axios.get(url);
+      let event = response.data[0];
+      this.eventDetails.title = event.title;
+      this.eventDetails.eventDateEnd = this.formatDate(event.eventdateend);
+      this.eventDetails.eventDateStart = this.formatDate(event.eventdatestart);
+      this.eventDetails.eventDescription = event.eventdescription;
+    },
+    createOrEditEvent: async function (event) {
+      event.preventDefault;
+      if (this.mode == "create") {
+        await this.createEvent(event);
+      } else {
+        await this.editEvent(event);
+      }
+      router.back();
+    },
+    editEvent: async function (event) {
+      event.preventDefault;
+      let url = `/api/groupCalendar/updateEvent`;
+      let payload = this.eventDetails;
+      payload.groupID = this.groupID;
+      payload.eventID = this.eventID;
+      await axios.post(url, payload);
+    },
     createEvent: async function (event) {
       event.preventDefault;
       let url = `/api/groupcalendar/create`;
       let payload = this.eventDetails;
       payload.groupID = this.groupID;
       await axios.post(url, payload);
-      this.back();
     },
     back: function () {
       router.back();
@@ -129,16 +172,18 @@ export default {
     /**
      *
      * Converts string date to proper format (M/D/Y)
-     * @param {*} tempDate string date
+     * @param {*} date string date
      */
-    formatDate: function (tempDate) {
-      let date = new Date(tempDate);
-      var month = date.getUTCMonth() + 1; //months from 1-12
-      var day = date.getUTCDate();
-      var year = date.getUTCFullYear();
+    formatDate: function (date) {
+      var d = new Date(date),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
 
-      let newdate = month + "/" + day + "/" + year;
-      return newdate;
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+
+      return [year, month, day].join("-");
     },
     /**
      * Returns todays date
