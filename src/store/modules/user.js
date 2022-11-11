@@ -16,6 +16,9 @@ export default {
     userid: function (state) {
       return state.userid;
     },
+    userInfo: function (state) {
+      return state.userInfo;
+    },
   },
   mutations: {
     UPDATE_USER(state, payload) {

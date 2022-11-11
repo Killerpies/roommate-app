@@ -5,7 +5,9 @@
       style="background-color: #a7c9eb"
     >
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Group: {{ groupInfo.groupname }}</a>
+        <a class="navbar-brand" href="#"
+          >Group: {{ $store.getters.groupname }}</a
+        >
         <button
           class="navbar-toggler"
           type="button"
@@ -84,7 +86,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
 import router from "@/router";
 import financialDashboard from "@/components/roomateApp/financial/FinancialDashboard.vue";
@@ -136,14 +137,17 @@ export default {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    // await this.getGroupInfo();
     this.groupInfo = await this.$store.dispatch("getGroupInfo", this.groupID);
     this.groupUsers = await this.$store.dispatch("getGroupUsers", this.groupID);
+    await this.$store.dispatch("getGroupContactInfo", this.getGroupUsers);
     await this.getCurrentUserInfo();
     this.currentTab = this.mode;
     this.dataReady = true;
   },
   computed: {
+    /**
+     * These Cannot use state because this is where we initially update the state
+     */
     getFirstName() {
       return this.user.given_name;
     },
@@ -152,6 +156,25 @@ export default {
     },
     getUserID() {
       return this.user.sub.split("|")[1].replace(/\s/g, "");
+    },
+    // Here is fine
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupContactInfo() {
+      return this.$store.getters.groupContactInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
+    },
+    getGroupName() {
+      return this.$store.getters.groupname;
+    },
+    getUserInfo() {
+      return this.$store.getters.userInfo;
+    },
+    isOwner() {
+      return this.groupInfo.groupowneruserid == this.getUserID;
     },
   },
   methods: {
@@ -176,27 +199,6 @@ export default {
           "getCurrentUserInfo",
           this.getUserID
         );
-      }
-    },
-    /**
-     * Makes call to server getting group name from server
-     * Then makes another call to server getting all users attached to the group
-     */
-    getGroupInfo: async function () {
-      // gets groupID, groupname, groupowner
-      let url = `/api/groups/${this.groupID}`;
-      let result = await axios.get(url);
-      this.groupInfo = result.data[0];
-      // gets members of the group
-      url = `/api/userGroupMembers/${this.groupID}`;
-      let response = await axios.get(url);
-      for (let i = 0; i < response.data.length; i++) {
-        let tempUser = {
-          userid: response.data[i].userid,
-          firstName: response.data[i].userfirstname,
-          lastName: response.data[i].userlastname,
-        };
-        this.groupUsers.push(tempUser);
       }
     },
   },

@@ -42,13 +42,13 @@ export default {
   mounted() {},
   computed: {
     getFirstName() {
-      return this.user.given_name;
+      return this.$store.getters.firstname;
     },
     getLastName() {
-      return this.user.family_name;
+      return this.$store.getters.lastname;
     },
     getUserID() {
-      return this.user.sub.split("|")[1].replace(/\s/g, "");
+      return this.$store.getters.userid;
     },
   },
   methods: {

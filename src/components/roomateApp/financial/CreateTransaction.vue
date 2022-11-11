@@ -46,7 +46,7 @@
         class="input-group mb-3"
       >
         <span class="input-group-text"
-          >{{ item.userfirstname }} {{ item.userlastname }}</span
+          >{{ item.firstName }} {{ item.lastName }}</span
         >
         <input
           type="number"
@@ -115,17 +115,24 @@ export default {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getGroupInfo();
+    this.groupInfo = this.getGroupInfo;
+    this.groupUsers = this.getGroupUsers;
   },
   computed: {
     getFirstName() {
-      return this.user.given_name;
+      return this.$store.getters.firstname;
     },
     getLastName() {
-      return this.user.family_name;
+      return this.$store.getters.lastname;
     },
     getUserID() {
-      return this.user.sub.split("|")[1].replace(/\s/g, "");
+      return this.$store.getters.userid;
+    },
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
     },
   },
   methods: {
@@ -216,24 +223,6 @@ export default {
 
       today = mm + "/" + dd + "/" + yyyy;
       return today;
-    },
-    /**
-     * Makes call to server getting group name from server
-     * Then makes another call to server getting all users attached to the group
-     */
-    getGroupInfo: async function () {
-      let url = `/api/groups/${this.groupID}`;
-      this.groupInfo = await axios.get(url);
-
-      url = `/api/userGroupMembers/${this.groupID}`;
-      let response = await axios.get(url);
-      for (let i = 0; i < response.data.length; i++) {
-        let temp = response.data[i];
-        temp.percentOwed = null;
-        temp.amountOwed = null;
-        this.groupUsers.push(temp);
-      }
-      //   this.groupUsers = response.data;
     },
     /**
      * Checks to see if all users have valid amount owed attached to their account

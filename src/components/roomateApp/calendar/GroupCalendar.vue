@@ -59,32 +59,33 @@ export default {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    await this.getGroupInfo();
+    this.groupInfo = this.getGroupInfo;
+    this.groupUsers = this.getGroupUsers;
     await this.getEvents();
     this.dataReady = true;
   },
   computed: {
     getFirstName() {
-      return this.user.given_name;
+      return this.$store.getters.firstname;
     },
     getLastName() {
-      return this.user.family_name;
+      return this.$store.getters.lastname;
     },
     getUserID() {
-      return this.user.sub.split("|")[1].replace(/\s/g, "");
+      return this.$store.getters.userid;
+    },
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
     },
   },
   methods: {
     getEvents: async function () {
       let url = `/api/groupcalendar/eventsforGroup/${this.groupID}`;
-      // let payload = {
-      //   groupID: this.groupID,
-      //   test: "dsfsfdsf",
-      // };
-      // console.log(payload);
       let response = await axios.get(url);
       let allEvents = response.data;
-      console.log(allEvents);
       for (let i = 0; i < allEvents.length; i++) {
         let temp = {
           id: allEvents[i].eventid,
@@ -98,7 +99,6 @@ export default {
       this.calendarOptions.events = this.events;
     },
     handleEventClick: function (arg) {
-      // console.log(arg.event);
       router.push({
         name: "createEvent",
         params: {
@@ -164,24 +164,6 @@ export default {
       if (day.length < 2) day = "0" + day;
 
       return [year, month, day].join("-");
-    },
-    /**
-     * Makes call to server getting group name from server
-     * Then makes another call to server getting all users attached to the group
-     */
-    getGroupInfo: async function () {
-      let url = `/api/groups/${this.groupID}`;
-      this.groupInfo = await axios.get(url);
-
-      url = `/api/userGroupMembers/${this.groupID}`;
-      let response = await axios.get(url);
-      for (let i = 0; i < response.data.length; i++) {
-        let temp = response.data[i];
-        temp.percentOwed = null;
-        temp.amountOwed = null;
-        this.groupUsers.push(temp);
-      }
-      //   this.groupUsers = response.data;
     },
   },
 };

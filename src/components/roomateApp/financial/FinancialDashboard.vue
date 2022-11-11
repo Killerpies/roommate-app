@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>Your Groups Transactions</h1>
-    <h1>{{ $store.getters.firstname }}</h1>
   </div>
   <div class="row">
     <div class="col">
@@ -87,23 +86,30 @@ export default {
       transactionList: [],
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    this.getGroupInfo();
+    this.groupInfo = this.getGroupInfo;
+    this.groupUsers = this.getGroupUsers;
     this.getTransactions();
     this.dataReady = true;
   },
   computed: {
     getFirstName() {
-      return this.user.given_name;
+      return this.$store.getters.firstname;
     },
     getLastName() {
-      return this.user.family_name;
+      return this.$store.getters.lastname;
     },
     getUserID() {
-      return this.user.sub.split("|")[1].replace(/\s/g, "");
+      return this.$store.getters.userid;
+    },
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
     },
   },
   methods: {
@@ -174,18 +180,6 @@ export default {
 
       let newdate = month + "/" + day + "/" + year;
       return newdate;
-    },
-    /**
-     * Makes call to server getting group name from server
-     * Then makes another call to server getting all users attached to the group
-     */
-    getGroupInfo: async function () {
-      let url = `/api/groups/${this.groupID}`;
-      this.groupInfo = await axios.get(url);
-
-      url = `/api/userGroupMembers/${this.groupID}`;
-      let response = await axios.get(url);
-      this.groupUsers = response.data;
     },
   },
 };

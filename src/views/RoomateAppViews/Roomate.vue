@@ -2,7 +2,7 @@
   <NotLoggedIn v-show="!isAuthenticated"></NotLoggedIn>
   <div class="createJoinGroup" v-if="isAuthenticated">
     <body>
-      <section v-if="groupInfo.length > 0">
+      <section v-if="allGroups.length > 0">
         <h1>Your Groups</h1>
         <article class="formArea">
           <select
@@ -12,7 +12,7 @@
           >
             <!-- <option selected>Open this select menu</option> -->
             <option
-              v-for="(item, index) in groupInfo"
+              v-for="(item, index) in allGroups"
               :key="index"
               v-bind:value="item.groupid"
             >
@@ -62,9 +62,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import Homepage from "@/components/roomateApp/Dashboard.vue";
-import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
 import NotLoggedIn from "@/components/NotLoggedIn.vue";
 import router from "../../router";
@@ -91,8 +88,7 @@ export default {
   data() {
     return {
       userID: null,
-      groups: [],
-      groupInfo: [],
+      allGroups: [],
     };
   },
   async mounted() {
@@ -100,10 +96,16 @@ export default {
       router.push({ name: "home" });
     }
 
-    this.getRelatedGroups();
     this.getCurrentUserInfo();
+    this.allGroups = await this.$store.dispatch(
+      "getRelatedGroups",
+      this.getUserID
+    );
   },
   computed: {
+    /**
+     * These Cannot use state because this is where we initially update the state
+     */
     getFirstName() {
       return this.user.given_name;
     },
@@ -113,6 +115,7 @@ export default {
     getUserID() {
       return this.user.sub.split("|")[1].replace(/\s/g, "");
     },
+    // Here is fine
   },
   methods: {
     /**
@@ -128,13 +131,11 @@ export default {
           firstName: this.getFirstName,
           lastName: this.getLastName,
         };
-        let url = `/api/userinfo/create`;
-        await axios.post(url, payload);
-
-        // get user entry from database (Either the brand new one or one thats already created)
-        url = `/api/userInfo/${this.getUserID}`;
-        let response = await axios.get(url);
-        this.currentUserInfo = response.data[0];
+        await this.$store.dispatch("createUser", payload);
+        this.currentUserInfo = await this.$store.dispatch(
+          "getCurrentUserInfo",
+          this.getUserID
+        );
       }
     },
     /**
@@ -151,33 +152,6 @@ export default {
      */
     createGroup: function () {
       router.push({ name: "createGroup" });
-    },
-    /**
-     * Takes the current userID
-     * Finds groups associated with that ID
-     * For each group Then get the groupNames associated with them and add to list of objects
-     */
-    getRelatedGroups: async function () {
-      try {
-        let url = `/api/usergroups/${this.getUserID}`;
-        let data = await axios.get(url);
-        this.groups = data.data;
-      } catch (error) {
-        console.error(error);
-      }
-      try {
-        let tempGroups = [];
-        for (let i = 0; i < this.groups.length; i++) {
-          let url = `/api/groups/${this.groups[i].groupid}`;
-          let data = await axios.get(url);
-          if (data.data[0]) {
-            tempGroups.push(data.data[0]);
-          }
-        }
-        this.groupInfo = tempGroups;
-      } catch (error) {
-        console.error(error);
-      }
     },
   },
 };

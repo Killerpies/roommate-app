@@ -9,7 +9,7 @@
         <button class="btn btn-warning" @click="changeGroupName">
           Change Group Name
         </button>
-        <p>Group Name: {{ groupInfo.groupname }}</p>
+        <p>Group Name: {{ getGroupName }}</p>
         <h4>Add/Invite Group Members</h4>
         <div>
           <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
@@ -98,23 +98,36 @@ export default {
     if (!this.isAuthenticated) {
       router.push({ name: "home" });
     }
-    await this.getCurrentUserInfo();
-    await this.getGroupInfo();
-    await this.getGroupContactInfo();
+    this.currentUserInfo = this.getUserInfo;
+    this.groupInfo = this.getGroupInfo;
+    this.groupUsers = this.getGroupUsers;
+    this.groupContactInfo = this.getGroupContactInfo;
     this.dataReady = true;
   },
   computed: {
     getFirstName() {
-      return this.user.given_name;
+      return this.$store.getters.firstname;
     },
     getLastName() {
-      return this.user.family_name;
+      return this.$store.getters.lastname;
     },
     getUserID() {
-      return this.user.sub.split("|")[1].replace(/\s/g, "");
+      return this.$store.getters.userid;
+    },
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
+    },
+    getUserInfo() {
+      return this.$store.getters.userInfo;
+    },
+    getGroupContactInfo() {
+      return this.$store.getters.groupContactInfo;
     },
     getGroupName() {
-      return this.groupInfo.groupname;
+      return this.$store.getters.groupname;
     },
     isOwner() {
       return this.groupInfo.groupowneruserid == this.getUserID;
@@ -126,17 +139,14 @@ export default {
         groupName: this.groupName,
         groupID: this.groupID,
       };
-
-      let url = `/api/alterGroup/changeGroupName`;
-      await axios.post(url, payload);
-      await this.getGroupInfo();
+      await this.$store.dispatch("changeGroupName", payload);
     },
     removeUserFromGroup: async function (index) {
       let temp = this.groupUsers.splice(index, 1)[0];
       let payload = temp;
       payload.groupID = this.groupID;
-      let url = `/api/userGroupMembers/removeMember`;
-      await axios.post(url, payload);
+      payload.groupUsers = this.groupUsers;
+      await this.$store.dispatch("removeUserFromGroup", payload);
     },
     inviteMemberWithEmail: async function () {
       let url = `/api/send-email`;
@@ -176,58 +186,6 @@ export default {
         alert(`Could Not find user: ${this.inviteUserID}`);
       }
       this.inviteUserID = "";
-    },
-    /**
-     * This function takes a users info given from their account and adds it to the database
-     * If the user already exists then it will just pull the old info
-     * If the user does not exist then it adds them to the database
-     */
-    getCurrentUserInfo: async function () {
-      // If user does not exist then will create a user entry
-      let payload = {
-        userid: this.getUserID,
-        firstname: this.getFirstName,
-        lastname: this.getLastName,
-        phonenumber: null,
-        email: null,
-      };
-      let url = `/api/userinfo/create`;
-      await axios.post(url, payload);
-
-      // get user entry from database (Either the brand new one or one thats already created)
-      url = `/api/userInfo/${this.getUserID}`;
-      let response = await axios.get(url);
-      this.currentUserInfo = response.data[0];
-    },
-    getGroupContactInfo: async function () {
-      for (let i = 0; i < this.groupUsers.length; i++) {
-        let url = `/api/userInfo/${this.groupUsers[i].userid}`;
-        let response = await axios.get(url);
-        // console.log(response.data);
-        let temp = response.data[0];
-        this.groupContactInfo.push(temp);
-      }
-    },
-    /**
-     * Makes call to server getting group name from server
-     * Then makes another call to server getting all users attached to the group
-     */
-    getGroupInfo: async function () {
-      // gets groupID, groupname, groupowner
-      let url = `/api/groups/${this.groupID}`;
-      let result = await axios.get(url);
-      this.groupInfo = result.data[0];
-      // gets members of the group
-      url = `/api/userGroupMembers/${this.groupID}`;
-      let response = await axios.get(url);
-      for (let i = 0; i < response.data.length; i++) {
-        let tempUser = {
-          userid: response.data[i].userid,
-          firstName: response.data[i].userfirstname,
-          lastName: response.data[i].userlastname,
-        };
-        this.groupUsers.push(tempUser);
-      }
     },
   },
 };
