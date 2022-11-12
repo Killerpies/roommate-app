@@ -62,7 +62,7 @@ export default {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {
       login: () => {
-        loginWithRedirect();
+        loginWithRedirect({ returnTo: window.location.origin });
       },
       logout: () => {
         logout({ returnTo: window.location.origin });

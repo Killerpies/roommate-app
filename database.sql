@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS userInfo;
 DROP TABLE IF EXISTS groceryLists;
 DROP TABLE IF EXISTS choreLists;
 DROP TABLE IF EXISTS calendarEvents;
+DROP TABLE IF EXISTS groupInvites;
 DROP TABLE IF EXISTS groups;
 
 CREATE TABLE groups 
@@ -89,12 +90,22 @@ CREATE TABLE calendarEvents
     eventDescription text
 );
 
-INSERT INTO groceryLists (groupID, listName, listContents, activeList)
-    VALUES (1, 'templist', '[]', False);
-
+CREATE TABLE groupInvites
+(
+    inviteID SERIAL PRIMARY KEY,
+    groupID INT REFERENCES groups(groupID),
+    activeInvite boolean
+);
 
 
 -- EXAMPLE INSERTS FOR EACH TABLE
+
+INSERT INTO groupInvites (inviteID, groupID, activeInvite)
+    VALUES (1, True);
+
+INSERT INTO groceryLists (groupID, listName, listContents, activeList)
+    VALUES (1, 'templist', '[]', False);
+
 INSERT INTO userDebt (userID, groupID, transactionID, percentOwed, amountOwed,amountPayed ,userOwedID, activeTransaction)
     VALUES ('101610594509084827079', 1, 1, .5, 100, 0,'101610594509084827079', True)
 

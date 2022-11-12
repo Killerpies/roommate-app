@@ -1,8 +1,7 @@
 <template>
   <div v-if="dataReady" class="createTransaction">
-    <button class="btn btn-warning" @click="acceptGroupInvite">
-      Accept Group Invite
-    </button>
+    <h1 v-if="!validInvite">This invite is not valid</h1>
+    <h1 v-if="!notInGroup">You are already a part of this group</h1>
   </div>
 </template>
 
@@ -14,13 +13,16 @@ import router from "@/router";
 export default {
   name: "joinGroup",
   props: {
-    groupID: String,
+    inviteID: String,
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {
       login: () => {
-        loginWithRedirect();
+        loginWithRedirect({
+          appState: { target: `${window.location.pathname}` },
+        });
+        // {redirect_uri: `${window.location.href}`,}
       },
       logout: () => {
         logout({ returnTo: window.location.origin });
@@ -31,19 +33,26 @@ export default {
   },
   data() {
     return {
-      newItem: "",
-      listName: "",
-      listContents: [],
       dataReady: false,
       groupInfo: null,
       groupUsers: [],
+      inviteDetails: {},
+      validInvite: false,
+      notInGroup: false,
+      allGroups: [],
     };
   },
-  mounted() {
+  async mounted() {
     if (!this.isAuthenticated) {
       this.login();
     }
-    this.getCurrentUserInfo();
+    // console.log(window.location.href);
+    await this.getCurrentUserInfo();
+    await this.checkInvite();
+    await this.checkIfInGroup();
+    if (this.validInvite && this.notInGroup) {
+      await this.acceptGroupInvite();
+    }
     this.dataReady = true;
   },
   computed: {
@@ -59,8 +68,55 @@ export default {
   },
   methods: {
     backHome: function () {
-      router.push({ name: "home" });
+      router.push({ name: "roommateapp" });
     },
+    checkInvite: async function () {
+      let url = `/api/groupInvites/findInvite/${this.inviteID}`;
+      let response = await axios.get(url);
+      this.inviteDetails = response.data[0];
+      this.validInvite = this.inviteDetails.activeinvite;
+    },
+    checkIfInGroup: async function () {
+      let notInGroup = true;
+      this.allGroups = await this.$store.dispatch(
+        "getRelatedGroups",
+        this.getUserID
+      );
+      // console.log(this.allGroups);
+      for (let i = 0; i < this.allGroups.length; i++) {
+        console.log(this.allGroups[i]);
+        if (this.allGroups[i].groupid == this.inviteDetails.groupid) {
+          notInGroup = false;
+        }
+      }
+      this.notInGroup = notInGroup;
+    },
+    /**
+     * Takes userID of person who is meant to be invited
+     * Finds their info in database
+     * Then adds them to current group in groupUsers table
+     */
+    acceptGroupInvite: async function () {
+      let url = `/api/userinfo/${this.getUserID}`;
+      let response = await axios.get(url);
+      if (response.data.length > 0) {
+        let payload = {
+          userID: this.getUserID,
+          newGroupID: this.inviteDetails.groupid,
+          firstName: response.data[0].firstname,
+          lastName: response.data[0].lastname,
+        };
+        url = `/api/groups/join`;
+        await axios.post(url, payload);
+        await this.$store.dispatch("resolveGroupInvite", this.inviteID);
+        router.push({ name: "roommateapp" });
+      }
+    },
+    /**
+     * This function takes a users info given from their account and adds it to the database
+     * If the user already exists then it will just pull the old info
+     * If the user does not exist then it adds them to the database
+     */
     getCurrentUserInfo: async function () {
       // If user does not exist then will create a user entry
       if (this.isAuthenticated) {
@@ -69,44 +125,12 @@ export default {
           firstName: this.getFirstName,
           lastName: this.getLastName,
         };
-        let url = `/api/userinfo/create`;
-        await axios.post(url, payload);
-
-        // get user entry from database (Either the brand new one or one thats already created)
-        url = `/api/userInfo/${this.getUserID}`;
-        let response = await axios.get(url);
-        this.currentUserInfo = response.data[0];
-      }
-    },
-    /**
-     * Takes userID of person who is meant to be invited
-     * Finds their info in database
-     * Then adds them to current group in groupUsers table
-     */
-    inviteMemberNoEmail: async function () {
-      let url = `/api/userinfo/${this.getUserID}`;
-      let response = await axios.get(url);
-      if (response.data.length > 0) {
-        let payload = {
-          userID: this.getUserID,
-          newGroupID: this.groupID,
-          firstName: response.data[0].firstname,
-          lastName: response.data[0].lastname,
-        };
-        url = `/api/groups/join`;
-        await axios.post(url, payload);
-        alert(
-          `Invited: ${response.data[0].firstname} ${response.data[0].lastname}`
+        await this.$store.dispatch("createUser", payload);
+        this.currentUserInfo = await this.$store.dispatch(
+          "getCurrentUserInfo",
+          this.getUserID
         );
-      } else {
-        alert(`Could Not find user: ${this.inviteUserID}`);
       }
-      this.inviteUserID = "";
-    },
-    acceptGroupInvite: async function () {
-      let url = ``;
-      let payload = {};
-      await axios.post(url, payload);
     },
   },
 };
@@ -114,7 +138,7 @@ export default {
 
 <style>
 .createTransaction {
-  text-align: right;
+  text-align: center;
   margin: auto;
   width: 60%;
   /* border: 3px solid green; */
@@ -123,7 +147,7 @@ export default {
 
 @media only screen and (max-width: 768px) {
   .createTransaction {
-    text-align: right;
+    text-align: center;
     margin: auto;
     width: 90%;
     padding: 10px;

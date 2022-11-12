@@ -7,6 +7,7 @@ export default {
     groupContactInfo: [],
     groupName: "",
     groupID: "",
+    currentTab: "financial",
   },
   getters: {
     groupname: function (state) {
@@ -23,6 +24,9 @@ export default {
     },
     groupID: function (state) {
       return state.groupID;
+    },
+    currentTab: function (state) {
+      return state.currentTab;
     },
   },
   mutations: {
@@ -43,8 +47,27 @@ export default {
     SET_GROUP_ID(state, groupID) {
       state.groupID = groupID;
     },
+    SET_CURRENT_TAB(state, currentTab) {
+      state.currentTab = currentTab;
+    },
   },
   actions: {
+    inviteMemberWithEmail: async function (context, payload) {
+      let url = `/api/send-email`;
+      await axios.post(url, payload);
+    },
+    createGroupInvite: async function (context, groupID) {
+      let url = `/api/groupInvites/createInvite/${groupID}`;
+      let response = await axios.post(url);
+      return response.data.rows[0].inviteid;
+    },
+    resolveGroupInvite: async function (context, inviteID) {
+      let url = `/api/groupInvites/resolveInvite/${inviteID}`;
+      await axios.post(url);
+    },
+    changeCurrentTab: function (context, currentTab) {
+      context.commit("SET_CURRENT_TAB", currentTab);
+    },
     getGroupContactInfo: async function (context, groupUsers) {
       let tempGroupContactInfo = [];
       for (let i = 0; i < groupUsers.length; i++) {

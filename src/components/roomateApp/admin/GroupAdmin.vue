@@ -149,17 +149,23 @@ export default {
       await this.$store.dispatch("removeUserFromGroup", payload);
     },
     inviteMemberWithEmail: async function () {
-      let url = `/api/send-email`;
+      let response = await this.$store.dispatch(
+        "createGroupInvite",
+        this.groupID
+      );
+      // console.log(response);
+      let inviteID = response;
       let subject = "Roommate-app: New Group invite";
       let body = `${this.getFirstName} ${this.getLastName} invited you too: ${this.getGroupName}\n`;
-      body += `Click the link below to join:`;
+      body += `Click the link below to join:\n`;
+      body += `${window.location.origin}/roommateapp/joinGroup/${inviteID}`;
       let recipient = this.inviteUserEmail;
       let payload = {
         recipient: recipient,
         subject: subject,
         body: body,
       };
-      await axios.post(url, payload);
+      await this.$store.dispatch("inviteMemberWithEmail", payload);
       this.inviteUserEmail = "";
     },
     /**

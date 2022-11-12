@@ -68,18 +68,21 @@
         </div>
       </div>
     </nav>
-    <calendar v-if="currentTab == 'calendar'" :groupID="groupID"></calendar>
-    <choreList v-if="currentTab == 'chorelist'" :groupID="groupID"></choreList>
+    <calendar v-if="getCurrentTab == 'calendar'" :groupID="groupID"></calendar>
+    <choreList
+      v-if="getCurrentTab == 'chorelist'"
+      :groupID="groupID"
+    ></choreList>
     <adminDashboard
-      v-if="currentTab == 'admin'"
+      v-if="getCurrentTab == 'admin'"
       :groupID="groupID"
     ></adminDashboard>
     <financialDashboard
-      v-if="currentTab == 'financial'"
+      v-if="getCurrentTab == 'financial'"
       :groupID="groupID"
     ></financialDashboard>
     <groceryList
-      v-if="currentTab == 'grocerylist'"
+      v-if="getCurrentTab == 'grocerylist'"
       :groupID="groupID"
     ></groceryList>
   </div>
@@ -99,10 +102,6 @@ export default {
   props: {
     groupID: String,
     // likes: Number
-    mode: {
-      type: String,
-      default: "financial",
-    },
   },
   components: {
     financialDashboard,
@@ -141,7 +140,7 @@ export default {
     this.groupUsers = await this.$store.dispatch("getGroupUsers", this.groupID);
     await this.$store.dispatch("getGroupContactInfo", this.getGroupUsers);
     await this.getCurrentUserInfo();
-    this.currentTab = this.mode;
+    console.log(window.location.href);
     this.dataReady = true;
   },
   computed: {
@@ -176,10 +175,13 @@ export default {
     isOwner() {
       return this.groupInfo.groupowneruserid == this.getUserID;
     },
+    getCurrentTab() {
+      return this.$store.getters.currentTab;
+    },
   },
   methods: {
     changeTab: function (tab) {
-      this.currentTab = tab;
+      this.$store.dispatch("changeCurrentTab", tab);
     },
     /**
      * This function takes a users info given from their account and adds it to the database
