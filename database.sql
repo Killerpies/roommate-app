@@ -32,7 +32,7 @@ CREATE TABLE userInfo
     userID varchar(255) PRIMARY KEY,
     firstName varchar(255),
     lastName varchar(255),
-    phoneNumber varchar(11),
+    phoneNumber varchar(16),
     email varchar(255)
 );
 

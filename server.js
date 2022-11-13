@@ -39,6 +39,9 @@ app.use("/api/userGroupMembers", roommateGroupMember);
 // USER INFO ROUTES
 const userInfo = require("./apiRoutes/roommateApp/user/userInfo.js");
 app.use("/api/userInfo", userInfo);
+// UPDATE USER INFO
+const updateUserInfo = require("./apiRoutes/roommateApp/user/updateUserInfo.js");
+app.use("/api/updateUserInfo", updateUserInfo);
 // GROCERY LIST ROUTES
 const groupGroceryList = require("./apiRoutes/roommateApp/grocerylist/groupGroceryList.js");
 app.use("/api/grocerylist", groupGroceryList);

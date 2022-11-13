@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import Profile from "../views/Profile.vue";
 // import RoomateDashboard from "../views/RoomateDashboard.vue"
 
 const routes = [
@@ -7,6 +8,12 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/user/Profile",
+    name: "userprofile",
+    props: true,
+    component: Profile,
   },
   {
     path: "/about",

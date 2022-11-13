@@ -76,7 +76,9 @@ export default {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {
       login: () => {
-        loginWithRedirect();
+        loginWithRedirect({
+          appState: { target: `${window.location.pathname}` },
+        });
       },
       logout: () => {
         logout({ returnTo: window.location.origin });
@@ -93,9 +95,8 @@ export default {
   },
   async mounted() {
     if (!this.isAuthenticated) {
-      router.push({ name: "home" });
+      this.login();
     }
-
     this.getCurrentUserInfo();
     this.allGroups = await this.$store.dispatch(
       "getRelatedGroups",

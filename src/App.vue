@@ -32,6 +32,14 @@
       </div>
       <form class="d-flex">
         <button
+          v-if="isAuthenticated"
+          class="btn btn-outline-secondary mx-2"
+          type="submit"
+          @click="goToProfile"
+        >
+          Profile
+        </button>
+        <button
           v-if="!isAuthenticated"
           class="btn btn-outline-secondary"
           type="submit"
@@ -54,6 +62,7 @@
 </template>
 <script>
 import { useAuth0 } from "@auth0/auth0-vue";
+import router from "@/router";
 
 export default {
   name: "App",
@@ -62,7 +71,7 @@ export default {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {
       login: () => {
-        loginWithRedirect({ returnTo: window.location.origin });
+        loginWithRedirect();
       },
       logout: () => {
         logout({ returnTo: window.location.origin });
@@ -70,6 +79,47 @@ export default {
       user,
       isAuthenticated,
     };
+  },
+  data() {
+    return {
+      userID: null,
+      allGroups: [],
+      currentUserInfo: null,
+    };
+  },
+  async mounted() {
+    // if (!this.isAuthenticated) {
+    //   router.push({ name: "home" });
+    // }
+    this.currentUserInfo = await this.$store.dispatch(
+      "getCurrentUserInfo",
+      this.getUserID
+    );
+  },
+  computed: {
+    getFirstName() {
+      return this.$store.getters.firstname;
+    },
+    getLastName() {
+      return this.$store.getters.lastname;
+    },
+    getUserID() {
+      return this.$store.getters.userid;
+    },
+    getGroupInfo() {
+      return this.$store.getters.groupInfo;
+    },
+    getGroupUsers() {
+      return this.$store.getters.groupUsers;
+    },
+    getUserInfo() {
+      return this.$store.getters.userInfo;
+    },
+  },
+  methods: {
+    goToProfile: function () {
+      router.push({ name: "userprofile" });
+    },
   },
 };
 </script>
