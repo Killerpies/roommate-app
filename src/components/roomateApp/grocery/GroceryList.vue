@@ -54,7 +54,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in currentListContents" :key="index">
+          <tr
+            v-for="(item, index) in currentListContents"
+            :key="index"
+            draggable="true"
+            @dragstart="startDrag($event, item)"
+          >
             <td>{{ item.itemName }}</td>
             <td>
               <a
@@ -87,7 +92,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in currentArchivedItems" :key="index">
+          <tr
+            v-for="(item, index) in currentArchivedItems"
+            :key="index"
+            draggable="true"
+            @dragstart="startDrag($event, item)"
+          >
             <td>{{ item.itemName }}</td>
             <td>
               <a
@@ -125,6 +135,23 @@ export default {
   },
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+    // eslint-disable-next-line
+    const startDrag = (event, item) => {
+      // https://www.youtube.com/watch?v=-kZLD40d-tI
+      // https://www.javascripttutorial.net/web-apis/javascript-drag-and-drop/
+      // https://www.w3schools.com/html/html5_draganddrop.asp
+      console.log(item);
+      event.dataTransfer.dropEffect = "move";
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("itemID", item.id);
+    };
+
+    const onDrop = (event, list) => {
+      const itemID = event.dataTransfer.getData("itemID");
+      const item = item.value.find((item) => item.id == itemID);
+
+      item.list = list;
+    };
     return {
       login: () => {
         loginWithRedirect();
@@ -134,6 +161,8 @@ export default {
       },
       user,
       isAuthenticated,
+      startDrag,
+      onDrop,
     };
   },
   data() {
@@ -176,6 +205,12 @@ export default {
     },
   },
   methods: {
+    // startDrag: function (event, item) {
+    //   console.log(item);
+    //   event.dataTransfer.dropEffect = "move";
+    //   event.dataTransfer.effectAllowed = "move";
+    //   event.dataTransfer.setData("itemID", item.id);
+    // },
     removeItem: async function (index) {
       this.currentArchivedItems.splice(index, 1);
       await this.updateList();

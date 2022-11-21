@@ -15,6 +15,7 @@
           aria-label="Update First Name"
           aria-describedby="basic-addon2"
           v-model="firstName"
+          @keyup.enter="updatePersonalInfo('firstName')"
         />
         <button
           class="btn btn-outline-secondary"
@@ -36,6 +37,7 @@
           aria-label="Update Last Name"
           aria-describedby="basic-addon2"
           v-model="lastName"
+          @keyup.enter="updatePersonalInfo('lastName')"
         />
         <button
           class="btn btn-outline-secondary"
@@ -55,6 +57,7 @@
           aria-label="Update Email"
           aria-describedby="basic-addon2"
           v-model="email"
+          @keyup.enter="updatePersonalInfo('email')"
         />
         <button
           class="btn btn-outline-secondary"
@@ -74,6 +77,7 @@
           aria-label="Update Phone #"
           aria-describedby="basic-addon2"
           v-model="phoneNumber"
+          @keyup.enter="updatePersonalInfo('phoneNumber')"
         />
         <button
           class="btn btn-outline-secondary"

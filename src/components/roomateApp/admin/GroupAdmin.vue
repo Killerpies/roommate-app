@@ -5,25 +5,58 @@
     <div>
       <section>
         <h4>Change Group Name</h4>
-        <input type="text" placeholder="Enter New Name" v-model="groupName" />
-        <button class="btn btn-warning" @click="changeGroupName">
-          Change Group Name
-        </button>
-        <p>Group Name: {{ getGroupName }}</p>
+        <div class="input-group mt-2 mb-4 formArea">
+          <span class="input-group-text" id="basic-addon2">Group Name</span>
+          <input
+            type="tel"
+            class="form-control"
+            placeholder="Enter User Email"
+            v-model="groupName"
+            @keyup.enter="changeGroupName"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon1"
+            @click="changeGroupName"
+          >
+            Change Group Name
+          </button>
+        </div>
         <h4>Add/Invite Group Members</h4>
-        <div>
-          <input type="text" placeholder="Enter ID" v-model="inviteUserID" />
-          <button class="btn btn-warning" @click="inviteMemberNoEmail">
+        <div class="input-group mb-3 formArea">
+          <span class="input-group-text" id="basic-addon2">ID</span>
+          <input
+            type="tel"
+            class="form-control"
+            placeholder="Enter User ID"
+            v-model="inviteUserID"
+            @keyup.enter="inviteMemberNoEmail"
+          />
+          <button
+            class="btn btn-outline-secosecondaryndary"
+            type="button"
+            id="button-addon1"
+            @click="inviteMemberNoEmail"
+          >
             Invite Member With ID
           </button>
         </div>
-        <div class="mt-2">
+        <div class="input-group mb-4 formArea">
+          <span class="input-group-text" id="basic-addon2">Email</span>
           <input
-            type="text"
+            type="tel"
+            class="form-control"
             placeholder="Enter User Email"
             v-model="inviteUserEmail"
+            @keyup.enter="inviteMemberWithEmail()"
           />
-          <button class="btn btn-danger" @click="inviteMemberWithEmail()">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon1"
+            @click="inviteMemberWithEmail()"
+          >
             Send Email Invite
           </button>
         </div>
@@ -201,5 +234,19 @@ export default {
 section {
   text-align: left;
   margin: 10px;
+}
+
+.formArea {
+  /* margin: 10px; */
+  /* margin: auto; */
+  text-align: left;
+  width: 50%;
+}
+
+.centerText {
+  text-align: center;
+  width: 100%;
+  /* border: 3px solid green; */
+  /* padding: 10px; */
 }
 </style>
