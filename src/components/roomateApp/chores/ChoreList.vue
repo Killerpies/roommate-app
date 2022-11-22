@@ -281,4 +281,24 @@ export default {
   margin: auto;
   text-align: center;
 }
+
+@media only screen and (max-width: 768px) {
+  .mainPage {
+    margin: auto;
+    text-align: center;
+    padding-right: 10px;
+  }
+  td,
+  th {
+    white-space: normal; /* Only needed when it's set differntly somewhere else */
+    word-wrap: break-word;
+  }
+  table {
+    word-break: break-word;
+  }
+
+  .properMargins {
+    display: flex;
+  }
+}
 </style>

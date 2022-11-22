@@ -6,7 +6,7 @@
       <section>
         <h4>Change Group Name</h4>
         <div class="input-group mt-2 mb-4 formArea">
-          <span class="input-group-text" id="basic-addon2">Group Name</span>
+          <!-- <span class="input-group-text" id="basic-addon2">Group Name</span> -->
           <input
             type="tel"
             class="form-control"
@@ -15,7 +15,7 @@
             @keyup.enter="changeGroupName"
           />
           <button
-            class="btn btn-outline-secondary"
+            class="btn btn-outline-secondary buttonSize"
             type="button"
             id="button-addon1"
             @click="changeGroupName"
@@ -25,7 +25,7 @@
         </div>
         <h4>Add/Invite Group Members</h4>
         <div class="input-group mb-3 formArea">
-          <span class="input-group-text" id="basic-addon2">ID</span>
+          <!-- <span class="input-group-text" id="basic-addon2">ID</span> -->
           <input
             type="tel"
             class="form-control"
@@ -34,7 +34,7 @@
             @keyup.enter="inviteMemberNoEmail"
           />
           <button
-            class="btn btn-outline-secosecondaryndary"
+            class="btn btn-outline-secondary buttonSize"
             type="button"
             id="button-addon1"
             @click="inviteMemberNoEmail"
@@ -43,7 +43,7 @@
           </button>
         </div>
         <div class="input-group mb-4 formArea">
-          <span class="input-group-text" id="basic-addon2">Email</span>
+          <!-- <span class="input-group-text" id="basic-addon2">Email</span> -->
           <input
             type="tel"
             class="form-control"
@@ -52,7 +52,7 @@
             @keyup.enter="inviteMemberWithEmail()"
           />
           <button
-            class="btn btn-outline-secondary"
+            class="btn btn-outline-secondary buttonSize"
             type="button"
             id="button-addon1"
             @click="inviteMemberWithEmail()"
@@ -248,5 +248,18 @@ section {
   width: 100%;
   /* border: 3px solid green; */
   /* padding: 10px; */
+}
+
+@media only screen and (max-width: 768px) {
+  .formArea {
+    text-align: left !important;
+    width: auto !important;
+  }
+  .buttonSize {
+    width: 40%;
+  }
+  span {
+    width: 20%;
+  }
 }
 </style>

@@ -313,7 +313,7 @@ export default {
   .createTransaction {
     text-align: right;
     margin: auto;
-    width: 90%;
+    width: 100%;
     padding: 10px;
   }
   /* For mobile phones: */
@@ -326,5 +326,9 @@ export default {
     /* text-overflow: ellipsis; */
     /* white-space: nowrap; */
   }
+}
+table {
+  table-layout: fixed;
+  width: 100%;
 }
 </style>

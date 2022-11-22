@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div v-if="dataReady">
+  <div v-if="dataReady" class="properMargins">
     <hr />
     <table class="table table-hover table-striped">
       <thead>
@@ -188,5 +188,19 @@ export default {
 <style>
 .createTransaction {
   margin: 10px;
+}
+@media only screen and (max-width: 768px) {
+  td,
+  th {
+    white-space: normal; /* Only needed when it's set differntly somewhere else */
+    word-wrap: break-word;
+  }
+  table {
+    word-break: break-word;
+  }
+
+  .properMargins {
+    display: flex;
+  }
 }
 </style>

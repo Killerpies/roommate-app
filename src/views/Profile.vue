@@ -18,7 +18,7 @@
           @keyup.enter="updatePersonalInfo('firstName')"
         />
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary buttonSize"
           type="button"
           id="button-addon1"
           @click="updatePersonalInfo('firstName')"
@@ -40,7 +40,7 @@
           @keyup.enter="updatePersonalInfo('lastName')"
         />
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary buttonSize"
           type="button"
           id="button-addon1"
           @click="updatePersonalInfo('lastName')"
@@ -60,7 +60,7 @@
           @keyup.enter="updatePersonalInfo('email')"
         />
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary buttonSize"
           type="button"
           id="button-addon1"
           @click="updatePersonalInfo('email')"
@@ -80,7 +80,7 @@
           @keyup.enter="updatePersonalInfo('phoneNumber')"
         />
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary buttonSize"
           type="button"
           id="button-addon1"
           @click="updatePersonalInfo('phoneNumber')"
@@ -209,5 +209,24 @@ export default {
   width: 100%;
   /* border: 3px solid green; */
   /* padding: 10px; */
+}
+
+@media only screen and (max-width: 768px) {
+  .formArea {
+    text-align: left;
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+  }
+  /* For mobile phones: */
+  .buttonSize {
+    width: auto;
+  }
+  span {
+    width: auto;
+  }
+  input {
+    width: fit-content;
+  }
 }
 </style>
