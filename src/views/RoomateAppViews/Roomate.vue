@@ -93,15 +93,17 @@ export default {
       allGroups: [],
     };
   },
-  async mounted() {
-    if (!this.isAuthenticated) {
-      this.login();
-    }
+  async created() {
     this.getCurrentUserInfo();
     this.allGroups = await this.$store.dispatch(
       "getRelatedGroups",
       this.getUserID
     );
+  },
+  async mounted() {
+    if (!this.isAuthenticated) {
+      this.login();
+    }
   },
   computed: {
     /**

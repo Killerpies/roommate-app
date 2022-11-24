@@ -127,15 +127,17 @@ export default {
       email: "",
     };
   },
-  async mounted() {
-    if (!this.isAuthenticated) {
-      this.login();
-    }
+  async created() {
     this.currentUserInfo = await this.$store.dispatch(
       "getCurrentUserInfo",
       this.getUserID
     );
     this.setDefaultValues();
+  },
+  async mounted() {
+    if (!this.isAuthenticated) {
+      this.login();
+    }
   },
   computed: {
     getFirstName() {

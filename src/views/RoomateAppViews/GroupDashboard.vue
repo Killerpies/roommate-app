@@ -132,15 +132,16 @@ export default {
       currentUserInfo: null,
     };
   },
-  async mounted() {
-    if (!this.isAuthenticated) {
-      router.push({ name: "home" });
-    }
+  async created() {
     this.groupInfo = await this.$store.dispatch("getGroupInfo", this.groupID);
     this.groupUsers = await this.$store.dispatch("getGroupUsers", this.groupID);
     await this.$store.dispatch("getGroupContactInfo", this.getGroupUsers);
     await this.getCurrentUserInfo();
-    console.log(window.location.href);
+  },
+  async mounted() {
+    if (!this.isAuthenticated) {
+      router.push({ name: "home" });
+    }
     this.dataReady = true;
   },
   computed: {
