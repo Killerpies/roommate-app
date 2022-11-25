@@ -12,7 +12,9 @@ const paths = [
 
 module.exports = defineConfig({
   configureWebpack: {
-    plugins: [new SitemapPlugin({ base: "https://roommateapp.org", paths })],
+    plugins: [
+      new SitemapPlugin({ base: "https://www.roommateapp.org", paths }),
+    ],
   },
   transpileDependencies: true,
   devServer: {
