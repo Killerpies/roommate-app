@@ -68,29 +68,17 @@ export default {
   name: "App",
   components: {},
   setup() {
-    // console.log(process.env.NODE_ENV);
-    if (
-      location.protocol !== "https:" &&
-      process.env.NODE_ENV !== "development"
-    ) {
-      location.protocol = "https:";
-    }
-    if (
-      location.protocol === "https:" ||
-      process.env.NODE_ENV === "development"
-    ) {
-      const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-      return {
-        login: () => {
-          loginWithRedirect();
-        },
-        logout: () => {
-          logout({ returnTo: window.location.origin });
-        },
-        user,
-        isAuthenticated,
-      };
-    }
+    const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+    return {
+      login: () => {
+        loginWithRedirect();
+      },
+      logout: () => {
+        logout({ returnTo: window.location.origin });
+      },
+      user,
+      isAuthenticated,
+    };
   },
   data() {
     return {

@@ -11,6 +11,21 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 
+var forceSsl = function (req, res, next) {
+  if (req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect(["https://", req.get("Host"), req.url].join(""));
+  }
+  return next();
+};
+
+app.configure(function () {
+  if (process.env.NODE_ENV === "production") {
+    app.use(forceSsl);
+  }
+
+  // other configurations etc for express go here...
+});
+
 // routes
 //Group transactions route
 const roommateTransactions = require("./apiRoutes/roommateApp/financial/roommateTransactions");
