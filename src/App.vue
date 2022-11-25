@@ -88,6 +88,14 @@ export default {
     };
   },
   async mounted() {
+    if (
+      location.protocol !== "https:" &&
+      process.env.NODE_ENV === "production"
+    ) {
+      location.replace(
+        `https:${location.href.substring(location.protocol.length)}`
+      );
+    }
     // if (!this.isAuthenticated) {
     //   router.push({ name: "home" });
     // }
