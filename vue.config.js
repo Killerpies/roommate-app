@@ -8,6 +8,12 @@ const paths = [
     priority: 1.0,
     changefreq: "yearly",
   },
+  {
+    path: "/roommateapp",
+    lastmod: "2022-11-22",
+    priority: 1.0,
+    changefreq: "yearly",
+  },
 ];
 
 module.exports = defineConfig({
