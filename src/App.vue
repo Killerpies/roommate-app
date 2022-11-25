@@ -75,17 +75,22 @@ export default {
     ) {
       location.protocol = "https:";
     }
-    const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-    return {
-      login: () => {
-        loginWithRedirect();
-      },
-      logout: () => {
-        logout({ returnTo: window.location.origin });
-      },
-      user,
-      isAuthenticated,
-    };
+    if (
+      location.protocol === "https:" ||
+      process.env.NODE_ENV === "development"
+    ) {
+      const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+      return {
+        login: () => {
+          loginWithRedirect();
+        },
+        logout: () => {
+          logout({ returnTo: window.location.origin });
+        },
+        user,
+        isAuthenticated,
+      };
+    }
   },
   data() {
     return {
