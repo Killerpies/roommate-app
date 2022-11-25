@@ -11,19 +11,17 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 
-var forceSsl = function (req, res, next) {
-  if (req.headers["x-forwarded-proto"] !== "https") {
-    return res.redirect(["https://", req.get("Host"), req.url].join(""));
+/* Redirect http to https */
+app.get("*", function (req, res, next) {
+  if (
+    "https" !== req.headers["x-forwarded-proto"] &&
+    "production" === process.env.NODE_ENV
+  ) {
+    res.redirect("https://" + req.hostname + req.url);
+  } else {
+    // Continue to other routes if we're not redirecting
+    next();
   }
-  return next();
-};
-
-app.configure(function () {
-  if (process.env.NODE_ENV === "production") {
-    app.use(forceSsl);
-  }
-
-  // other configurations etc for express go here...
 });
 
 // routes
