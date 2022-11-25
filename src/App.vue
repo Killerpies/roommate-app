@@ -68,6 +68,13 @@ export default {
   name: "App",
   components: {},
   setup() {
+    // console.log(process.env.NODE_ENV);
+    if (
+      location.protocol !== "https:" &&
+      process.env.NODE_ENV !== "development"
+    ) {
+      location.protocol = "https:";
+    }
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {
       login: () => {
@@ -88,9 +95,6 @@ export default {
     };
   },
   async mounted() {
-    if (location.protocol !== "https:") {
-      location.protocol = "https:";
-    }
     // if (!this.isAuthenticated) {
     //   router.push({ name: "home" });
     // }
