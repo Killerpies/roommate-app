@@ -10,7 +10,7 @@
           <input
             type="tel"
             class="form-control"
-            placeholder="Enter User Email"
+            placeholder="Enter New Group Name"
             v-model="groupName"
             @keyup.enter="changeGroupName"
           />
