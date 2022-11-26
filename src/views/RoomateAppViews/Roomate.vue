@@ -155,6 +155,9 @@ export default {
 };
 </script>
 <style>
+html body {
+  overflow: auto;
+}
 .createJoinGroup {
   margin: 10px;
   text-align: left;

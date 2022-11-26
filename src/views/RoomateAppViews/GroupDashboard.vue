@@ -208,4 +208,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+html body {
+  overflow: auto;
+}
+</style>
