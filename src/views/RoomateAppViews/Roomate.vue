@@ -1,5 +1,4 @@
 <template>
-  <NotLoggedIn v-show="!isAuthenticated"></NotLoggedIn>
   <div class="createJoinGroup" v-if="isAuthenticated">
     <body>
       <section v-if="allGroups.length > 0">
@@ -63,15 +62,11 @@
 
 <script>
 import { useAuth0 } from "@auth0/auth0-vue";
-import NotLoggedIn from "@/components/NotLoggedIn.vue";
 import router from "../../router";
 
 export default {
   name: "RoommateView",
-  components: {
-    // Homepage,
-    NotLoggedIn,
-  },
+  components: {},
   setup() {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     return {

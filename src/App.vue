@@ -145,16 +145,22 @@ nav {
     }
   }
 }
-html body {
-  background-color: #daebf7;
-}
 
 @font-face {
   font-family: myFirstFont;
   src: url("../fonts/Raleway/Raleway-VariableFont_wght.ttf");
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html div body {
   font-family: myFirstFont;
+}
+
+html body {
+  background-color: #daebf7 !important;
 }
 </style>
