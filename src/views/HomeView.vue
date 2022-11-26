@@ -1,8 +1,17 @@
 <template>
   <div class="bg"></div>
-  <!-- <div class="bg">
-    <img src="../assets/friendsOnBeach.jpg" />
-  </div> -->
+  <div class="buttonarea">
+    <button v-if="!isAuthenticated" class="btn btn-warning" @click="login">
+      Log in
+    </button>
+    <button
+      v-if="isAuthenticated"
+      class="btn btn-warning"
+      @click="redirectToApp"
+    >
+      Go to app
+    </button>
+  </div>
 </template>
 
 <script>
@@ -33,7 +42,13 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    redirectToApp: function () {
+      this.$router.push({
+        name: "roommateapp",
+      });
+    },
+  },
 };
 </script>
 <style>
@@ -46,6 +61,24 @@ export default {
   -o-background-size: cover;
   background-size: cover;
 } */
+.buttonarea .btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  /* background-color: #555; */
+  /* color: white; */
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.bg .btn:hover {
+  background-color: black;
+}
 .bg {
   background: url("../assets/friendsOnBeach.jpg") no-repeat center center fixed;
   background-size: cover;
@@ -55,6 +88,11 @@ export default {
   height: 92.59vh;
   position: absolute;
   right: 0;
+  filter: blur(1x);
+  -webkit-filter: blur(1px);
+}
+.bg button {
+  margin: auto;
 }
 body {
   overflow-y: hidden; /* Hide vertical scrollbar */
