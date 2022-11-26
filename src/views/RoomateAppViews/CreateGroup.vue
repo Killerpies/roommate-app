@@ -1,7 +1,7 @@
 <template>
   <div v-show="isAuthenticated">
     <h1>Create A Group:</h1>
-    <div class="formArea">
+    <div class="newGroupForm">
       <input
         v-on:keyup.enter="createGroup"
         v-model="groupName"
@@ -102,8 +102,8 @@ export default {
 };
 </script>
 
-<style>
-.formArea {
+<style scoped>
+.newGroupForm {
   text-align: right;
   margin: auto;
   width: 70%;

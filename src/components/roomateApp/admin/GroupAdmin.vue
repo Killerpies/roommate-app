@@ -259,6 +259,7 @@ section {
 .formArea {
   /* margin: 10px; */
   /* margin: auto; */
+  /* margin: 0 !important; */
   text-align: left !important;
   width: 50% !important;
 }
