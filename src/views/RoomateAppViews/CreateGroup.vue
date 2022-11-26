@@ -1,7 +1,7 @@
 <template>
   <div v-show="isAuthenticated">
     <h1>Create A Group:</h1>
-    <div class="formArea">
+    <div class="newGroupForm">
       <input
         v-on:keyup.enter="createGroup"
         v-model="groupName"
@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       groupName: "",
+      listContents: [],
     };
   },
   mounted() {},
@@ -66,15 +67,43 @@ export default {
         groupOwnerUserFirstName: this.getFirstName,
         groupOwnerUserLastName: this.getLastName,
       };
-      await axios.post(url, payload);
+      let response = await axios.post(url, payload);
+      let groupID = response.data.rows[0].groupid;
+      await this.createChoreList(groupID);
+      await this.createGroceryList(groupID);
+      // console.log(response);
       router.push({ name: "roommateapp" });
+    },
+    createChoreList: async function (groupID) {
+      let url = "/api/chorelist/create";
+      let list = JSON.stringify(this.listContents);
+      let payload = {
+        groupID: groupID,
+        listName: "chores",
+        listContents: list,
+        activeList: true,
+      };
+      await axios.post(url, payload);
+      router.back();
+    },
+    createGroceryList: async function (groupID) {
+      let url = "/api/grocerylist/create";
+      let list = JSON.stringify(this.listContents);
+      let payload = {
+        groupID: groupID,
+        listName: "groceries",
+        listContents: list,
+        activeList: true,
+      };
+      await axios.post(url, payload);
+      router.back();
     },
   },
 };
 </script>
 
-<style>
-.formArea {
+<style scoped>
+.newGroupForm {
   text-align: right;
   margin: auto;
   width: 70%;

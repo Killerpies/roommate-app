@@ -72,6 +72,13 @@
             {{ item.firstName }} {{ item.lastName }}
           </div>
         </div>
+        <div>
+          <br />
+          <button class="btn btn-danger" @click="deleteGroup">
+            Permanently delete group
+          </button>
+        </div>
+
         <hr />
       </section>
       <section>
@@ -167,6 +174,19 @@ export default {
     },
   },
   methods: {
+    deleteGroup: async function () {
+      if (
+        confirm(
+          "WARNING: This will permanently delete this group. Are you sure?"
+        )
+      ) {
+        let payload = {
+          groupID: this.groupID,
+        };
+        await this.$store.dispatch("deleteGroup", payload);
+        router.push({ name: "home" });
+      }
+    },
     changeGroupName: async function () {
       let payload = {
         groupName: this.groupName,
@@ -230,22 +250,23 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 section {
-  text-align: left;
-  margin: 10px;
+  text-align: left !important;
+  margin: 10px !important;
 }
 
 .formArea {
   /* margin: 10px; */
   /* margin: auto; */
-  text-align: left;
-  width: 50%;
+  /* margin: 0 !important; */
+  text-align: left !important;
+  width: 50% !important;
 }
 
 .centerText {
-  text-align: center;
-  width: 100%;
+  text-align: center !important;
+  width: 100% !important;
   /* border: 3px solid green; */
   /* padding: 10px; */
 }
@@ -256,10 +277,10 @@ section {
     width: auto !important;
   }
   .buttonSize {
-    width: 40%;
+    width: 40% !important;
   }
   span {
-    width: 20%;
+    width: 20% !important;
   }
 }
 </style>

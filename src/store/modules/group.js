@@ -52,6 +52,10 @@ export default {
     },
   },
   actions: {
+    deleteGroup: async function (context, payload) {
+      let url = "/api/alterGroup/deleteGroup";
+      await axios.post(url, payload);
+    },
     inviteMemberWithEmail: async function (context, payload) {
       let url = `/api/send-email`;
       await axios.post(url, payload);

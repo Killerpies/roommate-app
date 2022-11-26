@@ -37,7 +37,7 @@
           placeholder="Enter Transaction Amount"
           :state="validateMe('totalAmount')"
           @input="adjustInitialValues"
-          step="0.01"
+          step="0.001"
           required
         />
       </div>
@@ -57,7 +57,7 @@
           v-model="groupUsers[index].percentOwed"
           :state="validateMe('userPercentOwed')"
           @input="adjustOnPercentageChange(index)"
-          step="0.01"
+          step="0.001"
           required
         />
         <input
@@ -68,7 +68,7 @@
           v-model="groupUsers[index].amountOwed"
           :state="validateMe('userAmountOwed')"
           @input="adjustOnAmountChange(index)"
-          step="0.01"
+          step="0.001"
           required
         />
       </div>
