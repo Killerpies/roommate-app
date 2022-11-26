@@ -72,6 +72,13 @@
             {{ item.firstName }} {{ item.lastName }}
           </div>
         </div>
+        <div>
+          <br />
+          <button class="btn btn-danger" @click="deleteGroup">
+            Permanently delete group
+          </button>
+        </div>
+
         <hr />
       </section>
       <section>
@@ -167,6 +174,19 @@ export default {
     },
   },
   methods: {
+    deleteGroup: async function () {
+      if (
+        confirm(
+          "WARNING: This will permanently delete this group. Are you sure?"
+        )
+      ) {
+        let payload = {
+          groupID: this.groupID,
+        };
+        await this.$store.dispatch("deleteGroup", payload);
+        router.push({ name: "home" });
+      }
+    },
     changeGroupName: async function () {
       let payload = {
         groupName: this.groupName,

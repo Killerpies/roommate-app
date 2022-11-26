@@ -71,6 +71,7 @@ export default {
       let groupID = response.data.rows[0].groupid;
       await this.createChoreList(groupID);
       await this.createGroceryList(groupID);
+      // console.log(response);
       router.push({ name: "roommateapp" });
     },
     createChoreList: async function (groupID) {

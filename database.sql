@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS groupInvites;
 DROP TABLE IF EXISTS groups;
 
 CREATE TABLE groups 
-(
+(   
     groupID SERIAL PRIMARY KEY,
     groupName varchar(255), 
     groupOwnerUserID varchar(255),
@@ -21,7 +21,7 @@ CREATE TABLE userGroups
 (
     userGroupID SERIAL PRIMARY KEY,
     userID varchar(255),
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     userFirstName varchar(255),
     userLastName varchar(255),
     defaultGroup boolean
@@ -39,7 +39,7 @@ CREATE TABLE userInfo
  CREATE TABLE groupTransactions
  (
     transactionID SERIAL PRIMARY KEY,
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     userID varchar(255),
     transactionName varchar(255),
     transactionDescription text,
@@ -51,8 +51,8 @@ CREATE TABLE userDebt
 (
     deptID SERIAL PRIMARY KEY,
     userID varchar(255),
-    groupID INT REFERENCES groups(groupID),
-    transactionID INT REFERENCES groupTransactions(transactionID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
+    transactionID INT REFERENCES groupTransactions(transactionID) ON DELETE CASCADE,
     percentOwed decimal,
     amountOwed decimal,
     amountPayed decimal,
@@ -63,7 +63,7 @@ CREATE TABLE userDebt
 CREATE TABLE groceryLists
 (
     groceryListID SERIAL PRIMARY KEY,
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     listName varchar(255),
     listContents jsonb,
     archived jsonb,
@@ -73,7 +73,7 @@ CREATE TABLE groceryLists
 CREATE TABLE choreLists
 (
     choreListID SERIAL PRIMARY KEY,
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     listName varchar(255),
     listContents jsonb,
     archived jsonb,
@@ -83,7 +83,7 @@ CREATE TABLE choreLists
 CREATE TABLE calendarEvents
 (
     eventID SERIAL PRIMARY KEY,
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     title varchar(255),
     eventDateStart DATE,
     eventDateEnd DATE,
@@ -93,7 +93,7 @@ CREATE TABLE calendarEvents
 CREATE TABLE groupInvites
 (
     inviteID SERIAL PRIMARY KEY,
-    groupID INT REFERENCES groups(groupID),
+    groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     activeInvite boolean
 );
 
