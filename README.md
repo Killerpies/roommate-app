@@ -37,9 +37,8 @@ Set up user login service
             - logout urls
             - allowed web origins
         - Get domain and client_id from web app
-        - Add token to .env like so:
-            AUTHENTICATION_DOMAIN='domainhere'
-            AUTHENTICATION_CLIENTID='clientidhere'
+        - modify main.js under createAuth0
+            - add your domain and client_id
 
 
 Website should be ready to run locally
