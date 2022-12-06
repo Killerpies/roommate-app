@@ -13,8 +13,8 @@ app.use(router);
 
 app.use(
   createAuth0({
-    domain: process.env.AUTHENTICATION_DOMAIN,
-    client_id: process.env.AUTHENTICATION_CLIENTID,
+    domain: "dev-3f6063v3.us.auth0.com",
+    client_id: "VjzTdjG6M9W3ZasPstpq1HgPKTK40WtC",
     redirect_uri: window.location.origin,
   })
 );
