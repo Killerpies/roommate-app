@@ -13,6 +13,7 @@ app.use(router);
 
 app.use(
   createAuth0({
+    // TODO: Need to add env usage here
     domain: "dev-3f6063v3.us.auth0.com",
     client_id: "VjzTdjG6M9W3ZasPstpq1HgPKTK40WtC",
     redirect_uri: window.location.origin,
