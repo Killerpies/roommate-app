@@ -1,3 +1,4 @@
+-- COPY START
 DROP TABLE IF EXISTS userDebt;
 DROP TABLE IF EXISTS userGroups;
 DROP TABLE IF EXISTS groupTransactions;
@@ -96,6 +97,8 @@ CREATE TABLE groupInvites
     groupID INT REFERENCES groups(groupID) ON DELETE CASCADE,
     activeInvite boolean
 );
+
+-- COPY END
 
 
 -- EXAMPLE INSERTS FOR EACH TABLE
